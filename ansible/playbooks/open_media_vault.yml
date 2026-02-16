@@ -1,0 +1,49 @@
+---
+- name: Prepare Open Media Vault VM
+  hosts: omv
+  become: yes
+
+  roles:
+    - role: qemu_guest_agent
+
+  tasks:
+    - name: Check if OMV was installed (from saved fact)
+      debug:
+        msg: "OMV was previously installed!"
+      when: ansible_local.omv_installed.installed | default(false)
+
+    - name: Check if OpenMediaVault is already installed
+      ansible.builtin.command: dpkg -l openmediavault
+      register: omv_check
+      ignore_errors: true
+      changed_when: false
+
+    - name: Install OpenMediaVault if not installed
+      ansible.builtin.shell: |
+        wget -O - https://github.com/OpenMediaVault-Plugin-Developers/installScript/raw/master/install | bash
+      args:
+        creates: /usr/sbin/omv-initsystem
+      when: omv_check.rc != 0
+      register: omv_install
+
+    - name: Reboot if OMV was just installed
+      ansible.builtin.reboot:
+        msg: "Rebooting after OMV installation"
+        connect_timeout: 5
+        reboot_timeout: 600
+      when: omv_install is changed
+
+    - name: Mark OMV installed
+      ansible.builtin.copy:
+        dest: /etc/ansible_facts.d/omv_installed.fact
+        content: '{"installed": true}'
+      when: omv_install is changed
+---
+- name: Configure OpenMediaVault
+  hosts: omv
+  become: yes
+
+  tasks:
+    - name: Mount filesystem to external SSD
+      ansible.builtin.debug:
+        msg: "Unimplemented"

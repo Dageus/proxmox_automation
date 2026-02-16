@@ -1,0 +1,24 @@
+---
+- name: Download and deploy Vikunja
+  hosts: vikunja
+  become: yes
+
+  tasks:
+    - name: Ensure system is up to date
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: yes
+      tags:
+        - [update]
+
+    - name: Deploy Portainer Agent
+      include_role:
+        name: docker_service_deploy
+      vars:
+        service_name: portainer_agent
+
+    - name: Deploy vikunja
+      include_role:
+        name: docker_service_deploy
+      vars:
+        service_name: vikunja

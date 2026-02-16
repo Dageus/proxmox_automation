@@ -1,0 +1,49 @@
+---
+- name: Setup NFS mounts for LXC containers
+  hosts: proxmox
+  become: yes
+  vars:
+    nfs_server: "192.168.1.20"
+    nfs_export_path: "/mnt/user"
+
+    nfs_mounts:
+      - nfs_export_directory: "immich"
+        lxc_configs:
+          - lxc_id: 110
+            mp_index: 0
+            lxc_mount_target: "/mnt/immich_data"
+
+      - nfs_export_directory: "nextcloud"
+        lxc_configs:
+          - lxc_id: 108
+            mp_index: 0
+            lxc_mount_target: "/nextcloud_data"
+
+      - nfs_export_directory: "paperless-ngx"
+        lxc_configs:
+          - lxc_id: 113
+            mp_index: 0
+            lxc_mount_target: "/paperless-ngx_data"
+
+  tasks:
+    - name: Mount NFS shares on Proxmox host
+      include_role:
+        name: nfs_mount
+      vars:
+        nfs_export_directory: "{{ item.nfs_export_directory }}"
+        mount_opts: "defaults,_netdev,soft,timeo=30"
+      loop: "{{ nfs_mounts }}"
+      loop_control:
+        label: "{{ item.nfs_export_directory }}"
+
+    - name: Configure LXC bind mounts
+      include_role:
+        name: lxc_mount
+      vars:
+        lxc_id: "{{ item.1.lxc_id }}"
+        mp_index: "{{ item.1.mp_index }}"
+        nfs_export_directory: "{{ item.0.nfs_export_directory }}"
+        lxc_mount_target: "{{ item.1.lxc_mount_target }}"
+      loop: "{{ nfs_mounts | subelements('lxc_configs') }}"
+      loop_control:
+        label: "LXC {{ item.1.lxc_id }} mount {{ item.0.nfs_export_directory }}"

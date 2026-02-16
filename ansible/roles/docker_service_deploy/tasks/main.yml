@@ -1,0 +1,37 @@
+---
+- name: Ensure Docker service is running
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Ensure docker-compose plugin is installed
+  ansible.builtin.apt:
+    name: docker-compose-plugin
+    state: present
+    update_cache: yes
+
+- name: Ensure target directory exists for {{ service_name }}
+  ansible.builtin.file:
+    path: "/opt/{{ service_name }}"
+    state: directory
+    mode: '0755'
+
+- name: Copy docker-compose and env files
+  copy:
+    src: "{{ item }}"
+    dest: /opt/{{ service_name }}/
+    mode: '0600'
+  with_fileglob:
+    - "{{ app_config_base_path }}/{{ service_name }}/*"
+    - "{{ app_config_base_path }}/{{ service_name }}/.*"
+
+- name: Deploy the containers via docker compose
+  community.docker.docker_compose_v2:
+    project_src: "/opt/{{ service_name }}"
+    state: present
+  register: output
+
+- name: Show Docker Compose output
+  ansible.builtin.debug:
+    var: output

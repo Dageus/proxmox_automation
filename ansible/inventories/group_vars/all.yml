@@ -1,0 +1,4 @@
+---
+# Define the absolute path to the app-configs directory
+app_config_base_path: "/home/jomouzio/Desktop/projects/homelab/services"
+proxmox_mapped_uid: 100000

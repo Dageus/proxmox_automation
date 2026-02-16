@@ -1,0 +1,47 @@
+---
+- name: Check if LXC exists
+  ansible.builtin.stat:
+    path: "/etc/pve/lxc/{{ lxc_id }}.conf"
+  register: lxc_config
+  failed_when: not lxc_config.stat.exists
+
+- name: Get current LXC status
+  ansible.builtin.command: "pct status {{ lxc_id }}"
+  register: lxc_status
+  changed_when: false
+
+- name: Stop LXC if running
+  ansible.builtin.command: "pct stop {{ lxc_id }}"
+  when: "'running' in lxc_status.stdout"
+  register: lxc_stopped
+
+- name: Add bind mount to LXC config
+  ansible.builtin.lineinfile:
+    path: "/etc/pve/lxc/{{ lxc_id }}.conf"
+    line: "mp{{ mp_index }}: /mnt/nas/{{ nfs_export_directory }},mp={{ lxc_mount_target }}"
+    regexp: "^mp{{ mp_index }}:"
+    state: present
+    backup: yes
+
+- name: Start LXC container
+  ansible.builtin.command: "pct start {{ lxc_id }}"
+  when: lxc_stopped.changed
+
+- name: Wait for LXC to be ready
+  ansible.builtin.wait_for:
+    timeout: 30
+  when: lxc_stopped.changed
+
+- name: Ensure Immich data directory has correct ownership on host
+  ansible.builtin.file:
+    path: /mnt/nas/{{ nfs_export_directory }}
+    owner: "{{ proxmox_mapped_uid }}"
+    group: "{{ proxmox_mapped_uid }}"
+    state: directory
+    recurse: yes
+
+- name: Verify mount inside LXC
+  ansible.builtin.command: "pct exec {{ lxc_id }} -- ls {{ lxc_mount_target }}"
+  register: mount_verify
+  changed_when: false
+  failed_when: mount_verify.rc != 0

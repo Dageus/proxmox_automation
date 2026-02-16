@@ -1,0 +1,27 @@
+---
+- name: Install NFS client utilities
+  ansible.builtin.apt:
+    name: nfs-common
+    state: present
+    update_cache: yes
+
+- name: Ensure mount point directory exists on host
+  ansible.builtin.file:
+    path: "/mnt/nas/{{ nfs_export_directory }}"
+    state: directory
+    mode: "0755"
+
+- name: Mount NFS share on Proxmox host
+  ansible.builtin.mount:
+    path: "/mnt/nas/{{ nfs_export_directory }}"
+    src: "{{ nfs_server }}:/{{ nfs_export_directory }}"
+    fstype: nfs
+    opts: "{{ mount_opts | default('defaults,_netdev') }}"
+    state: mounted
+    backup: yes
+
+- name: Verify NFS mount is accessible
+  ansible.builtin.stat:
+    path: "/mnt/nas/{{ nfs_export_directory }}"
+  register: mount_check
+  failed_when: not mount_check.stat.exists
