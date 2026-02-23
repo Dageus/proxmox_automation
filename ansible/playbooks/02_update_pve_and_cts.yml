@@ -1,0 +1,35 @@
+---
+- name: Proxmox & Container Maintenance
+  hosts: proxmox_nodes
+  become: true
+  tasks:
+
+    - name: Update Hypervisor (Proxmox Host)
+      apt:
+        update_cache: yes
+        upgrade: dist
+        autoremove: yes
+        clean: yes
+
+    - name: Update PVE Appliance metadata
+      command: pveam update
+
+    - name: Get list of running LXCs
+      command: pct list
+      register: lxc_list
+      changed_when: false
+
+    - name: Update each running container
+      community.general.proxmox_exec:
+        vmid: "{{ item.split()[0] }}"
+        command: "sh -c 'apt update && apt dist-upgrade -y && apt autoremove -y'"
+      # This loop filters the header and only picks 'running' containers
+      loop: "{{ lxc_list.stdout_lines[1:] }}"
+      when: "'running' in item"
+      register: lxc_updates
+
+    - name: Summary of updated containers
+      debug:
+        msg: "Updated LXC ID: {{ item.item.split()[0] }}"
+      loop: "{{ lxc_updates.results }}"
+      when: item.skipped is not defined

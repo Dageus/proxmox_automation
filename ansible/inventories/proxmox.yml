@@ -1,0 +1,15 @@
+plugin: community.general.proxmox
+# The API URL of your Proxmox host
+url: https://192.168.1.100:8006
+user: root@pam
+password: "your_password_here" # Or use a token/key for better security
+verify_ssl: false
+
+# This tells Ansible how to "group" your VMs
+groups:
+  docker_hosts: "'docker' in name"  # Put all VMs with 'docker' in the name into this group
+  adguard_nodes: "tags contains 'dns'" # If you use tags in Proxmox
+
+# Tell Ansible which IP to use for connection
+compose:
+  ansible_host: proxmox_agent_networks[0].ip_addresses[0]

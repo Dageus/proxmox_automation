@@ -90,6 +90,8 @@ resource "proxmox_virtual_environment_vm" "openmediavault" {
     }
   }
 
+  user_data_file_id = proxmox_virtual_machine_vzdump_file.user_data.id
+
   # Boot order
   boot_order = ["virtio0"]
 }
