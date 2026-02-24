@@ -1,0 +1,12 @@
+---
+- name: Restart PVE Proxy
+  systemctl:
+    name: pveproxy
+    state: restarted
+
+- name: Update Grub
+  command: update-grub
+
+- name: Reboot Host
+  reboot:
+    msg: "Reboot initiated by Ansible"

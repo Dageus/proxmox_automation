@@ -1,0 +1,8 @@
+---
+- name: Initialize Proxmox Cluster
+  hosts: proxmox_nodes
+  roles:
+    - role: proxmox_init
+      vars:
+        pve_remove_local_lvm: true
+        pve_cpu_governor: "powersave"

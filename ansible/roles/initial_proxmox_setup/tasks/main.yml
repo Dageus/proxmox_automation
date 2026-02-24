@@ -1,0 +1,28 @@
+---
+- name: Gather hardware facts
+  setup:
+    gather_subset:
+      - 'processor'
+
+- name: Mask sleep and suspend targets
+  systemctl:
+    name: "{{ item }}"
+    masked: yes
+  loop:
+    - sleep.target
+    - suspend.target
+    - hibernate.target
+    - hybrid-sleep.target
+
+- include_tasks: hardware.yml
+
+- include_tasks: storage.yml
+
+- include_tasks: repository.yml
+  when: pve_manage_repos | default(false)
+
+- include_tasks: tweaks.yml
+  when: pve_remove_subscription_nag | default(false)
+
+- include_tasks: security.yml
+  when: pve_create_api_tokens | default(false)

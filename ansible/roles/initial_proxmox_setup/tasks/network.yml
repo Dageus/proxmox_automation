@@ -1,0 +1,33 @@
+---
+- name: Configure Proxmox Internal NAT Bridge
+  hosts: pve
+  become: true
+  tasks:
+    - name: Ensure vmbr1 configuration exists in interfaces file
+      blockinfile:
+        path: /etc/network/interfaces
+        marker: "# {mark} ANSIBLE MANAGED BLOCK: vmbr1 NAT"
+        block: |
+          auto vmbr1
+          iface vmbr1 inet static
+              address 10.10.10.1/24
+              bridge-ports none
+              bridge-stp none
+              bridge-fd 0
+              post-up echo 1 > /proc/sys/net/ipv4/ip_forward
+              post-up iptables -t nat -A POSTROUTING -s '10.100.0.0/24' -o vmbr0 -j MASQUERADE
+              post-down iptables -t nat -D POSTROUTING -s '10.100.0.0/24' -o vmbr0 -j MASQUERADE
+      register: network_config
+
+    - name: Enable IP Forwarding
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        sysctl_set: true
+        state: present
+        reload: true
+
+    - name: Apply network changes
+      shell: ifup vmbr1
+      when: network_config.changed
+

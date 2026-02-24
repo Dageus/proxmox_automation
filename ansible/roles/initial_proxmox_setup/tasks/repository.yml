@@ -1,0 +1,38 @@
+---
+- name: Proxmox Repository and Update Management
+  hosts: pve
+  become: true
+  tasks:
+
+    - name: Disable the pve-enterprise repository
+      apt_repository:
+        repo: "deb https://enterprise.proxmox.com/debian/pve {{ ansible_distribution_release }} pve-enterprise"
+        state: absent
+
+    - name: Disable the ceph-enterprise repository (if exists)
+      apt_repository:
+        repo: "deb https://enterprise.proxmox.com/debian/ceph-quincy {{ ansible_distribution_release }} enterprise"
+        state: absent
+
+    - name: Add Proxmox No-Subscription repository
+      apt_repository:
+        repo: "deb http://download.proxmox.com/debian/pve {{ ansible_distribution_release }} pve-no-subscription"
+        state: present
+        update_cache: yes
+
+    - name: Perform full system upgrade (dist-upgrade)
+      apt:
+        upgrade: dist
+        update_cache: yes
+      register: upgrade_result
+
+    - name: Install PowerTop
+      apt:
+        name: powertop
+        state: present
+
+    - name: Enable PowerTop Auto-Tune on boot
+      cron:
+        name: "PowerTop Auto-Tune"
+        special_time: reboot
+        job: "/usr/sbin/powertop --auto-tune"

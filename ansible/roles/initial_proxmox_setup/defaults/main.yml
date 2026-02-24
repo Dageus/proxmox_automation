@@ -1,0 +1,16 @@
+---
+pve_cpu_governor_intel: "conservative"
+pve_cpu_governor_amd: "powersave"
+pve_swappiness: 10
+
+pve_remove_local_lvm: true
+pve_enable_fstrim: true
+pve_zfs_arc_max_gb: 4
+
+pve_manage_repos: true
+pve_remove_subscription_nag: true
+
+pve_api_user: "iac_prov"
+pve_api_role: "Administrator"
+
+pve_create_api_tokens: true

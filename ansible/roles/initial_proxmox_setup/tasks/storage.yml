@@ -1,0 +1,58 @@
+---
+- name: Set vm.swappiness to 10
+  sysctl:
+    name: vm.swappiness
+    value: '10'
+    state: present
+    sysctl_file: /etc/sysctl.conf
+    reload: yes
+
+- name: Disable High Availability and Clustering services
+  systemctl:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  loop:
+    - pve-ha-crm.service
+    - pve-ha-lrm.service
+    - corosync.service
+
+- name: Enable and start fstrim.service
+  systemctl:
+    name: fstrim.timer
+    state: started
+    enabled: yes
+  when: pve_enable_fstrim
+
+- name: Merge local-lvm into local storage
+  block:
+    - name: Remove local-lvm from Proxmox config
+      command: pvesm remove local-lvm
+
+    - name: Delete the data Logical Volume
+      lvol:
+        vg: pve
+        lv: data
+        state: absent
+        force: yes
+
+    - name: Expand root and resize filesystem
+      lvol:
+        vg: pve
+        lv: root
+        size: +100%FREE
+        resizefs: yes
+
+    - name: Enable all content types on local storage
+      command: pvesm set local --content backup,iso,vztmpl,rootdir,images,snippets
+
+    - name: Verify storage layout
+      command: lvs
+      register: lvs_output
+
+    - debug:
+        msg: "Storage successfully merged. Root details: {{ lvs_output.stdout_lines }}"
+
+  when:
+    - "'local-lvm' in pve_storage_status.stdout"
+    - pve_remove_local_lvm
