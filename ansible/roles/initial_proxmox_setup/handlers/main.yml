@@ -1,4 +1,9 @@
 ---
+- name: Restart SSH
+  systemctl:
+    name: ssh
+    state: restarted
+
 - name: Restart PVE Proxy
   systemctl:
     name: pveproxy
@@ -10,3 +15,4 @@
 - name: Reboot Host
   reboot:
     msg: "Reboot initiated by Ansible"
+    reboot_timeout: 600
