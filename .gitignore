@@ -1,3 +1,5 @@
+ansible/inventories/proxmox.yml
+
 # Local .terraform directories
 .terraform/
 

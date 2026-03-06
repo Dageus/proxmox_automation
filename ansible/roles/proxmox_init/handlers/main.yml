@@ -1,11 +1,11 @@
 ---
 - name: Restart SSH
-  systemctl:
+  service:
     name: ssh
     state: restarted
 
 - name: Restart PVE Proxy
-  systemctl:
+  service:
     name: pveproxy
     state: restarted
 

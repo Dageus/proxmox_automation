@@ -8,7 +8,7 @@
     reload: yes
 
 - name: Disable High Availability and Clustering services
-  systemctl:
+  service:
     name: "{{ item }}"
     state: stopped
     enabled: no
@@ -18,11 +18,17 @@
     - corosync.service
 
 - name: Enable and start fstrim.service
-  systemctl:
+  service:
     name: fstrim.timer
     state: started
     enabled: yes
   when: pve_enable_fstrim
+
+- name: Check if local-lvm exists in Proxmox
+  shell: pvesm status | grep -q 'local-lvm'
+  register: local_lvm_check
+  failed_when: false
+  changed_when: false
 
 - name: Merge local-lvm into local storage
   block:
@@ -54,5 +60,5 @@
         msg: "Storage successfully merged. Root details: {{ lvs_output.stdout_lines }}"
 
   when:
-    - "'local-lvm' in pve_storage_status.stdout"
     - pve_remove_local_lvm
+    - local_lvm_check.rc == 0

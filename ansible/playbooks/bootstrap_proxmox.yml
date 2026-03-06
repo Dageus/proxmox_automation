@@ -4,5 +4,4 @@
   roles:
     - role: proxmox_init
       vars:
-        pve_remove_local_lvm: true
-        pve_cpu_governor: "powersave"
+        pve_remove_local_lvm: false

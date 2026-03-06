@@ -1,0 +1,70 @@
+---
+- name: Install ACPI support packages
+  apt:
+    name:
+      - acpi-support
+      - acpid
+      - acpi
+    state: present
+    update_cache: yes
+
+- name: Install lm-sensors
+  apt:
+    name: lm-sensors
+    state: present
+
+- name: Configure sensors (non-interactive)
+  shell: yes "" | sensors-detect
+  changed_when: false
+
+- name: Set CPU Vendor fact
+  set_fact:
+    cpu_vendor: "{{ 'intel' if 'Intel' in ansible_processor else 'amd' if 'AuthenticAMD' in ansible_processor else 'unknown' }}"
+
+- name: Install AMD Microcode updates
+  apt:
+    name: amd64-microcode
+    state: present
+  when: cpu_vendor == "amd"
+
+- name: Disable intel_pstate in GRUB
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="(.*)"'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 intel_pstate=disable"'
+    backrefs: yes
+  when: cpu_vendor == "intel"
+  register: grub_updated
+
+- name: AMD | Ensure amd_pstate is set to active in GRUB
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="(.*)"'
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 amd_pstate=active"'
+    backrefs: yes
+  when: cpu_vendor == "amd"
+  register: grub_amd
+
+- name: Update GRUB
+  command: update-grub
+  when: grub_updated.changed
+
+- name: Reboot host if GRUB was changed
+  reboot:
+    msg: "Rebooting to apply intel_pstate=disable"
+    reboot_timeout: 600
+  when: grub_updated.changed
+
+- name: Intel | Set CPU Governor
+  cron:
+    name: "Set CPU Governor"
+    special_time: reboot
+    job: 'echo "{{ pve_cpu_governor_intel }}" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor'
+  when: cpu_vendor == "intel"
+
+- name: AMD | Set CPU Governor
+  cron:
+    name: "Set AMD Governor"
+    special_time: reboot
+    job: 'echo "{{ pve_cpu_governor_amd }}" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor'
+  when: cpu_vendor == "amd"

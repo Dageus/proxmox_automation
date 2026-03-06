@@ -1,0 +1,75 @@
+---
+- name: Create Terraform Admin role
+  ansible.builtin.shell: >
+    pveum role add TerraformAdmin -privs 
+    "VM.Allocate VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU 
+    VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network 
+    VM.Config.Options VM.Monitor VM.Audit VM.PowerMgmt Datastore.Allocate 
+    Datastore.AllocateSpace Datastore.Audit SDN.Use Sys.Audit Sys.Modify"
+  register: role_result
+  failed_when: 
+    - role_result.rc != 0 
+    - "'already exists' not in role_result.stderr"
+  changed_when: role_result.rc == 0
+
+- name: Debug Variable Visibility
+  ansible.builtin.debug:
+    msg: "The user is {{ pve_api_user }} and the password variable is defined: {{ pve_api_password is defined }}"
+
+- name: Create Terraform Service User
+  ansible.builtin.shell: |
+    pveum user add {{ pve_api_user }}@pve --password "{{ pve_api_password }}"
+  register: user_creation
+  failed_when:
+    - user_creation.rc != 0
+    - "'already exists' not in user_creation.stderr"
+  changed_when: user_creation.rc == 0
+
+- name: Check if API Token exists
+  ansible.builtin.shell: "pveum user token list {{ pve_api_user }}@pve | grep -q 'terraform-token'"
+  register: token_check
+  failed_when: false
+  changed_when: false
+
+- name: Generate API Token
+  ansible.builtin.shell: "pveum user token add {{ pve_api_user }}@pve terraform-token --privsep 0"
+  register: token_output
+  when: token_check.rc != 0
+  no_log: false
+
+- name: Extract Token Secret and Save to Vault
+  delegate_to: localhost
+  run_once: true
+  ansible.builtin.shell: |
+    SECRET=$(echo '{{ token_output.stdout }}' | grep -oP 'value\s+\K[\w-]+')
+    echo "vault_proxmox_token: $SECRET" > ./group_vars/proxmox_nodes/vault_token.yml
+    ansible-vault encrypt ./group_vars/proxmox_nodes/vault_token.yml --vault-password-file ../.vault_pass.txt
+  when: 
+    - token_output is changed
+    - token_output.stdout is defined
+
+- name: DISPLAY API TOKEN SECRET
+  debug:
+    msg: "SECRET: {{ token_output.stdout_lines | select('match', '.*value:.*') | list }}"
+  when: token_check.rc == 0 and token_output is changed
+
+- name: Ensure Ansible SSH keypair exists on local machine
+  openssh_keypair:
+    path: "~/.ssh/ansible"
+    type: ed25519
+    comment: "ansible-svc-key"
+  delegate_to: localhost
+  run_once: true
+
+- name: Ensure SSH Key is authorized for root
+  ansible.posix.authorized_key:
+    user: root
+    state: present
+    key: "{{ lookup('file', '~/.ssh/ansible.pub') }}"
+
+- name: Disable Password Authentication for SSH
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+  notify: Restart SSH

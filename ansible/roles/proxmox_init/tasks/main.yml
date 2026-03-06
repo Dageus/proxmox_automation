@@ -5,21 +5,24 @@
       - 'processor'
 
 - name: Mask sleep and suspend targets
-  systemctl:
+  service:
     name: "{{ item }}"
     masked: yes
+    enabled: no
   loop:
     - sleep.target
     - suspend.target
     - hibernate.target
     - hybrid-sleep.target
 
+- include_tasks: repository.yml
+  when: pve_manage_repos | default(false)
+
+- include_tasks: network.yml
+
 - include_tasks: hardware.yml
 
 - include_tasks: storage.yml
-
-- include_tasks: repository.yml
-  when: pve_manage_repos | default(false)
 
 - include_tasks: tweaks.yml
   when: pve_remove_subscription_nag | default(false)
