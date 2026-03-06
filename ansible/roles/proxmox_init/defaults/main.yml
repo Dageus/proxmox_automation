@@ -11,7 +11,9 @@ pve_manage_repos: true
 pve_remove_subscription_nag: true
 
 pve_api_user: "provisioner"
+pve_api_token_name: "provisioner"
 
 pve_api_password: "terraform"
 
 pve_create_api_tokens: true
+pve_create_root_api_token: false

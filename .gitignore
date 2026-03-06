@@ -1,3 +1,4 @@
+.vault_pass.txt
 ansible/inventories/proxmox.yml
 
 # Local .terraform directories

@@ -1,0 +1,10 @@
+services:
+  runner:
+    build: .
+    volumes:
+      - .:/infrastructure
+      - ~/.ssh:/root/.ssh:ro
+    environment:
+      - ANSIBLE_CONFIG=/infrastructure/ansible/ansible.cfg
+    stdin_open: true
+    tty: true

@@ -1,6 +1,11 @@
 ---
-app_config_base_path: "/home/jomouzio/Desktop/projects/homelab/services"
+app_config_base_path: "~/Desktop/projects/homelab/services"
 proxmox_mapped_uid: 100000
 
 ansible_password: "{{ vault_pve_root_password }}"
 ansible_python_interpreter: /usr/bin/python3
+
+proxmox_api_host: "192.168.1.93"
+proxmox_api_user: "provisioner@pve"
+proxmox_api_token_id: "provisioner"
+proxmox_api_token_secret: "{{ vault_proxmox_token }}"

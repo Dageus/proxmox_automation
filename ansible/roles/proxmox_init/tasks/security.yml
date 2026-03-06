@@ -25,28 +25,58 @@
     - "'already exists' not in user_creation.stderr"
   changed_when: user_creation.rc == 0
 
+- name: Assign TerraformAdmin role to Service User at Datacenter root
+  ansible.builtin.shell: >
+    pveum acl modify / -user {{ pve_api_user }}@pve -role TerraformAdmin
+  register: acl_result
+  changed_when: acl_result.rc == 0
+
 - name: Check if API Token exists
-  ansible.builtin.shell: "pveum user token list {{ pve_api_user }}@pve | grep -q 'terraform-token'"
+  ansible.builtin.shell: "pveum user token list {{ pve_api_user }}@pve | grep -q '{{ pve_api_token_name }}'"
   register: token_check
   failed_when: false
   changed_when: false
 
 - name: Generate API Token
-  ansible.builtin.shell: "pveum user token add {{ pve_api_user }}@pve terraform-token --privsep 0"
+  ansible.builtin.shell: "pveum user token add {{ pve_api_user }}@pve {{ pve_api_token_name }} --privsep 0"
   register: token_output
   when: token_check.rc != 0
   no_log: false
+  when: not pve_create_root_api_token
 
 - name: Extract Token Secret and Save to Vault
   delegate_to: localhost
   run_once: true
   ansible.builtin.shell: |
-    SECRET=$(echo '{{ token_output.stdout }}' | grep -oP 'value\s+\K[\w-]+')
-    echo "vault_proxmox_token: $SECRET" > ./group_vars/proxmox_nodes/vault_token.yml
-    ansible-vault encrypt ./group_vars/proxmox_nodes/vault_token.yml --vault-password-file ../.vault_pass.txt
+    SECRET=$(echo '{{ token_output.stdout }}' | grep -oE '[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}')
+    mkdir -p ../group_vars/proxmox_nodes
+    echo "vault_proxmox_token: \"$SECRET\"" > ../group_vars/proxmox_nodes/vault_token.yml
+    ansible-vault encrypt ../group_vars/proxmox_nodes/vault_token.yml --vault-password-file ../.vault_pass.txt
   when: 
     - token_output is changed
     - token_output.stdout is defined
+    - not pve_create_root_api_token
+
+- name: Create Root API Token (Superuser)
+  ansible.builtin.shell: "pveum user token add root@pam automation --privsep 0"
+  register: root_token_output
+  failed_when:
+    - root_token_output.rc != 0 
+    - "'already exists' not in root_token_output.stderr"
+  changed_when: root_token_output.rc == 0
+  when: pve_create_root_api_token
+
+- name: Extract and Save Root Token
+  delegate_to: localhost
+  run_once: true
+  ansible.builtin.shell: |
+    SECRET=$(echo '{{ root_token_output.stdout }}' | grep -oE '[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}')
+    mkdir -p ../group_vars/proxmox_nodes
+    echo "vault_proxmox_token: \"$SECRET\"" > ../group_vars/proxmox_nodes/vault_token.yml
+    ansible-vault encrypt ../group_vars/proxmox_nodes/vault_token.yml --vault-password-file ../.vault_pass.txt
+  when:
+    - root_token_output is changed
+    - pve_create_root_api_token
 
 - name: DISPLAY API TOKEN SECRET
   debug:
