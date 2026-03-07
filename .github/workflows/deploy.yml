@@ -1,0 +1,37 @@
+---
+name: Deploy Homelab Infrastructure
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: 
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH Key for Ansible
+        run: |
+          mkdir -p .ssh
+          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > .ssh/ansible
+          chmod 600 .ssh/ansible
+          echo "${{ secrets.ANSIBLE_SSH_PUBLIC_KEY }}" > .ssh/ansible.pub
+
+      - name: Set up Ansible Vault Password
+        run: |
+          echo "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > .vault_pass.txt
+
+      - name: Execute Deployment Pipeline
+        env:
+          TF_VAR_proxmox_api_token_secret: ${{ secrets.PROXMOX_API_TOKEN_SECRET }}
+        run: |
+          chmod +x deploy.sh
+
+          docker compose run --rm \
+            -e TF_VAR_proxmox_api_token_secret \
+            runner ./deploy.sh

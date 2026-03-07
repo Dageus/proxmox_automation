@@ -129,3 +129,14 @@
       tags: ['cleanup']
 
     - name: Turn LXC into template
+      delegate_to: pve
+      become: yes
+      block:
+        - name: Stop the LXC container
+          ansible.builtin.command: "pct stop {{ vmid }}"
+          # vmid should be passed as an extra-var or defined in your inventory
+
+        - name: Convert LXC to Template
+          ansible.builtin.command: "pct template {{ vmid }}"
+          register: template_result
+          changed_when: "'already a template' not in template_result.stderr"

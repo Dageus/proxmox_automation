@@ -1,8 +1,8 @@
 ---
-- name: Set vm.swappiness to 10
+- name: Set vm.swappiness
   sysctl:
     name: vm.swappiness
-    value: '10'
+    value: '{{ pve_swappiness }}'
     state: present
     sysctl_file: /etc/sysctl.conf
     reload: yes

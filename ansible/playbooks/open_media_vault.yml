@@ -23,6 +23,8 @@
         wget -O - https://github.com/OpenMediaVault-Plugin-Developers/installScript/raw/master/install | bash
       args:
         creates: /usr/sbin/omv-initsystem
+      async: 1800
+      poll: 30
       when: omv_check.rc != 0
       register: omv_install
 

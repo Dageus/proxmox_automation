@@ -1,9 +1,9 @@
 services:
   runner:
     build: .
+    network_mode: "host"
     volumes:
       - .:/infrastructure
-      - ~/.ssh:/root/.ssh:ro
     environment:
       - ANSIBLE_CONFIG=/infrastructure/ansible/ansible.cfg
     stdin_open: true

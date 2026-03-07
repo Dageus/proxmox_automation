@@ -18,8 +18,16 @@ RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/sh
     apt-get update && apt-get install terraform
 
 # Install Ansible and Proxmox Collections
-RUN pip install --no-cache-dir ansible proxmoxer && \
-    ansible-galaxy collection install community.general ansible.posix
+RUN pip install --no-cache-dir ansible proxmoxer requests && \
+    ansible-galaxy collection install community.general community.proxmox ansible.posix
+
+RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh
+
+COPY .ssh/ansible /root/.ssh/ansible
+COPY .ssh/ansible.pub /root/.ssh/ansible.pub
+
+RUN chmod 600 /root/.ssh/ansible && \
+    chmod 644 /root/.ssh/ansible.pub
 
 WORKDIR /infrastructure
 ENTRYPOINT ["/bin/bash"]

@@ -22,7 +22,9 @@ resource "proxmox_virtual_environment_vm" "openmediavault" {
     cores   = 2
     sockets = 1
     type    = "host"
-    flags   = ["-aes"] # my host's CPU doesn't support AES
+    # my host's CPU doesn't support AES
+    # NOTE: now it does :)
+    # flags   = ["-aes"] 
   }
 
   memory {
@@ -69,10 +71,12 @@ resource "proxmox_virtual_environment_vm" "openmediavault" {
   # Cloud-init / SSH / networking
   initialization {
     datastore_id = "local"
+
     user_account {
       username = "root"
-      keys     = [file("~/.ssh/ansible_ssh.pub")]
+      keys     = [file(var.ansible_ssh_key_path)]
       password = "root"
+
     }
 
     ip_config {
@@ -89,8 +93,6 @@ resource "proxmox_virtual_environment_vm" "openmediavault" {
       }
     }
   }
-
-  user_data_file_id = proxmox_virtual_machine_vzdump_file.user_data.id
 
   # Boot order
   boot_order = ["virtio0"]

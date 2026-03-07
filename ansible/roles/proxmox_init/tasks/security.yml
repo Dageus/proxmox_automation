@@ -40,9 +40,10 @@
 - name: Generate API Token
   ansible.builtin.shell: "pveum user token add {{ pve_api_user }}@pve {{ pve_api_token_name }} --privsep 0"
   register: token_output
-  when: token_check.rc != 0
+  when:
+    - token_check.rc != 0
+    - not pve_create_root_api_token
   no_log: false
-  when: not pve_create_root_api_token
 
 - name: Extract Token Secret and Save to Vault
   delegate_to: localhost
@@ -51,13 +52,13 @@
     SECRET=$(echo '{{ token_output.stdout }}' | grep -oE '[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}')
     mkdir -p ../group_vars/proxmox_nodes
     echo "vault_proxmox_token: \"$SECRET\"" > ../group_vars/proxmox_nodes/vault_token.yml
-    ansible-vault encrypt ../group_vars/proxmox_nodes/vault_token.yml --vault-password-file ../.vault_pass.txt
+    ansible-vault encrypt ../group_vars/proxmox_nodes/vault_token.yml
   when: 
     - token_output is changed
     - token_output.stdout is defined
     - not pve_create_root_api_token
 
-- name: Create Root API Token (Superuser)
+- name: Generate Root API Token
   ansible.builtin.shell: "pveum user token add root@pam automation --privsep 0"
   register: root_token_output
   failed_when:
@@ -73,7 +74,7 @@
     SECRET=$(echo '{{ root_token_output.stdout }}' | grep -oE '[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}')
     mkdir -p ../group_vars/proxmox_nodes
     echo "vault_proxmox_token: \"$SECRET\"" > ../group_vars/proxmox_nodes/vault_token.yml
-    ansible-vault encrypt ../group_vars/proxmox_nodes/vault_token.yml --vault-password-file ../.vault_pass.txt
+    ansible-vault encrypt ../group_vars/proxmox_nodes/vault_token.yml
   when:
     - root_token_output is changed
     - pve_create_root_api_token

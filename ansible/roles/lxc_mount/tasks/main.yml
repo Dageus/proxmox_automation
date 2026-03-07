@@ -32,7 +32,7 @@
     timeout: 30
   when: lxc_stopped.changed
 
-- name: Ensure Immich data directory has correct ownership on host
+- name: Ensure Application data directory has correct ownership on host
   ansible.builtin.file:
     path: /mnt/nas/{{ nfs_export_directory }}
     owner: "{{ proxmox_mapped_uid }}"

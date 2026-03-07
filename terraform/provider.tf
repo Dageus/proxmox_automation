@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.84.1"
+      version = "~> 0.96.0"
     }
     null = {
       source  = "hashicorp/null"
@@ -14,6 +14,8 @@ terraform {
 provider "proxmox" {
   endpoint = var.proxmox_host
 
+  insecure = true
+
   # API Token
   api_token = var.proxmox_api_token
 
@@ -22,11 +24,11 @@ provider "proxmox" {
   # csrf_token  = var.proxmox_csrf_token
 
   # Username/Password
-  # insecure = true
   username = var.proxmox_user_name
   # password = var.proxmox_user_password
 
-  # ssh {
-  #   agent = true
-  # }
+  ssh {
+    agent = true
+    username = "root"
+  }
 }

@@ -4,10 +4,9 @@ variable "proxmox_node" {
   default     = "pve"
 }
 
-variable "proxmox_template_vm_id" {
+variable "lxc_template_vm_id" {
   type        = number
   description = "VM ID of the LXC template"
-  default     = 100
 }
 
 variable "proxmox_clone_node" {
@@ -19,13 +18,12 @@ variable "proxmox_clone_node" {
 variable "ssh_public_key_path" {
   type        = string
   description = "Public SSH Key of the Ansible user"
-  default     = "~/.ssh/ansible_ssh"
 }
 
 variable "gpu_passthrough" {
   type        = bool
-  default     = false
   description = "Whether to mount Intel GPU render devices into the container"
+  default     = false
 }
 
 variable "gpu_devices" {
@@ -40,5 +38,7 @@ variable "container" {
     vm_id     = number
     memory    = number
     disk_size = number
+    tags      = list(string)
+    password  = optional(string)
   })
 }

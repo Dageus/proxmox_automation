@@ -13,7 +13,7 @@ variable "proxmox_csrf_token" {
 variable "proxmox_host" {
   type        = string
   description = "Proxmox host endpoint or IP"
-  default     = "https://192.168.1.75:8006/"
+  default     = "https://192.168.1.93:8006/"
 }
 variable "proxmox_node" {
   type        = string
@@ -25,15 +25,20 @@ variable "container_docker_template_name" {
   description = "LXC name of the Docker Template Container"
   default     = "docker-template"
 }
+variable "container_docker_template_id" {
+  type        = number
+  description = "LXC VM ID of the Docker Template Container"
+  default     = 100
+}
 variable "container_os_template_name" {
   type        = string
   description = "OS template to be used when creating LXC"
   default     = "debian-12-standard_12.7-1_amd64.tar.zst"
 }
-variable "ansible_ssh_key_path" {
+variable "ssh_public_key_path" {
   type        = string
   description = "Location of the Ansible ssh key in the filesystem"
-  default     = "~/.ssh/ansible_ssh.pub"
+  default     = "~/.ssh/ansible.pub"
 }
 variable "external_ssd_disk_name" {
   type        = string

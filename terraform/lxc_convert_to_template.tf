@@ -1,10 +1,14 @@
 resource "null_resource" "convert_to_template" {
-  # depends_on = [proxmox_container.docker_template]
+  depends_on = [proxmox_virtual_environment_container.existing_docker_template]
+
+  triggers = {
+    container_id = proxmox_virtual_environment_container.existing_docker_template.vm_id
+  }
 
   provisioner "remote-exec" {
     inline = [
-      "pct stop ${proxmox_virtual_environment_container.docker_template.vm_id}",
-      "pct template ${proxmox_virtual_environment_container.docker_template.vm_id}",
+      "pct stop ${proxmox_virtual_environment_container.existing_docker_template.vm_id}",
+      "pct template ${proxmox_virtual_environment_container.existing_docker_template.vm_id}"
     ]
 
     connection {

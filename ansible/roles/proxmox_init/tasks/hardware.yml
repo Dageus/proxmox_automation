@@ -19,7 +19,7 @@
 
 - name: Set CPU Vendor fact
   set_fact:
-    cpu_vendor: "{{ 'intel' if 'Intel' in ansible_processor else 'amd' if 'AuthenticAMD' in ansible_processor else 'unknown' }}"
+    cpu_vendor: "{{ 'intel' if 'Intel' in ansible_facts['processor'] else 'amd' if 'AuthenticAMD' in ansible_facts['processor'] else 'unknown' }}"
 
 - name: Install AMD Microcode updates
   apt:

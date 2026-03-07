@@ -35,3 +35,5 @@
 - name: Show Docker Compose output
   ansible.builtin.debug:
     var: output
+
+

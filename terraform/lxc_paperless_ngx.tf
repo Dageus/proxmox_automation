@@ -1,15 +1,15 @@
-module "focalboard" {
+module "paperless_ngx" {
   source = "./modules/docker_lxc"
 
   ssh_public_key_path = var.ssh_public_key_path
   lxc_template_vm_id = var.container_docker_template_id
 
   container = {
-    name      = "focalboard",
-    vm_id     = 118
-    memory    = 256
+    name      = "paperless_ngx"
+    vm_id     = 121
+    memory    = 2048
     disk_size = 8
-    tags      = ["terraform", "docker"]
-    password  = "focalboard"
+    tags      = ["terraform", "media", "docker"]
+    password  = "paperless"
   }
 }

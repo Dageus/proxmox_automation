@@ -2,7 +2,7 @@ resource "proxmox_virtual_environment_container" "container" {
   node_name   = var.proxmox_node
   vm_id       = var.container.vm_id
   description = "LXC for ${var.container.name}"
-  tags        = ["terraform", "docker"]
+  tags        = var.container.tags
 
   start_on_boot = true
   protection    = false
@@ -10,7 +10,12 @@ resource "proxmox_virtual_environment_container" "container" {
   clone {
     datastore_id = "local"
     node_name    = var.proxmox_clone_node
-    vm_id        = 100
+    vm_id        = var.lxc_template_vm_id
+  }
+
+  disk {
+    datastore_id = "local"
+    size         = var.container.disk_size
   }
 
   memory {
@@ -22,7 +27,8 @@ resource "proxmox_virtual_environment_container" "container" {
     hostname = var.container.name
 
     user_account {
-      keys = [file("~/.ssh/ansible_ssh")]
+      keys = [file(var.ansible_ssh_key_path)]
+      password = var.container.password
     }
 
     ip_config {
@@ -35,7 +41,7 @@ resource "proxmox_virtual_environment_container" "container" {
     ip_config {
       ipv4 {
         address = "10.150.0.${var.container.vm_id}/16"
-        gateway = "10.150.0.1"
+        # gateway = "10.150.0.1"
       }
     }
   }
@@ -55,11 +61,10 @@ resource "proxmox_virtual_environment_container" "container" {
   }
 
   # GPU passthrough
-  dynamic "mount_point" {
+  dynamic "device_passthrough" {
     for_each = var.gpu_passthrough ? toset(var.gpu_devices) : []
     content {
-      volume = mount_point.value
-      path   = mount_point.value
+      path = device_passthrough.value
     }
   }
 }
