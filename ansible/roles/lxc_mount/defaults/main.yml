@@ -3,4 +3,6 @@ lxc_id: 101
 mp_index: 0
 lxc_mount_target: /immich
 nfs_export_directory: /immich_data
-proxmox_mapped_uid: ?????
+
+mount_folder: false
+change_folder_permissions: true

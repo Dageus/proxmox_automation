@@ -13,3 +13,22 @@ module "actual_budget" {
     password  = "actualbudget"
   }
 }
+
+resource "null_resource" "run_ansible_actual_budget" {
+  depends_on = [module.actual_budget]
+
+  triggers = {
+    vm_id = "118"
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      sleep 5
+
+      ansible-playbook -i infrastructure/ansible/inventory.ini \
+        infrastructure/ansible/deploy_actual_budget.yml \
+        --vault-password-file .vault_pass.txt \
+        -e "target_host=192.168.1.218"
+    EOT
+  }
+}

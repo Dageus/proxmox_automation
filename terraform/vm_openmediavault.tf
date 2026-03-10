@@ -24,7 +24,7 @@ resource "proxmox_virtual_environment_vm" "openmediavault" {
     type    = "host"
     # my host's CPU doesn't support AES
     # NOTE: now it does :)
-    # flags   = ["-aes"] 
+    # flags   = ["-aes"]
   }
 
   memory {

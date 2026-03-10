@@ -1,0 +1,35 @@
+---
+- name: Phase 1 - Proxmox Host Storage Prep
+  hosts: proxmox
+  become: true
+  vars:
+    nfs_server: "192.168.1.20"         # Your OMV IP
+    nfs_path: "/export/proxmox_data"   # The root share on OMV
+    mount_point: "/mnt/nas"            # Where it lives on Proxmox
+    lxc_dirs:                          # The folders Terraform needs
+      - immich
+      - nextcloud
+      - paperless-ngx
+
+  tasks:
+    - name: Ensure base mount directory exists on Proxmox
+      ansible.builtin.file:
+        path: "{{ mount_point }}"
+        state: directory
+        mode: '0755'
+
+    - name: Mount NFS share via systemd automount
+      ansible.posix.mount:
+        src: "{{ nfs_server }}:{{ nfs_path }}"
+        path: "{{ mount_point }}"
+        fstype: nfs
+        # These opts create a resilient systemd automount in the background
+        opts: "rw,soft,timeo=30,x-systemd.automount,x-systemd.requires=network-online.target,x-systemd.idle-timeout=600"
+        state: mounted
+
+    - name: Create LXC app directories on the NFS share
+      ansible.builtin.file:
+        path: "{{ mount_point }}/{{ item }}"
+        state: directory
+        mode: '0775'
+      loop: "{{ lxc_dirs }}"

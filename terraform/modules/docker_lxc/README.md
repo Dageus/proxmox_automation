@@ -8,7 +8,7 @@ This module bundles together all the necessary provisioning for cloning a pre-de
 
 - `ssh_public_key_path`: The SSH public key to be inserted into the `known_hosts` of the LXC for future Ansible configuration
 
-- `container`: The container configuration. It includes information such as: 
+- `container`: The container configuration. It includes information such as:
     - `name`: The LXC name
     - `vm_id`: The VM ID to be given to the created LXC
     - `memory`: The RAM in MB to be given to the LXC

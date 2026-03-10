@@ -26,3 +26,15 @@ echo "Configuring Applications..."
 ansible-playbook infrastructure/ansible/site.yml --vault-password-file .vault_pass.txt
 
 echo "Pipeline Complete."
+
+# Alternative
+
+#!/bin/bash
+# 1. Prep the Host (Mount NFS, create folders)
+ansible-playbook -i inventory.ini host_prep.yml
+
+# 2. Build the Infrastructure
+terraform apply -auto-approve
+
+# 3. Configure the Apps inside the containers
+ansible-playbook -i proxmox.yaml deploy_apps.yml

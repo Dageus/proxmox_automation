@@ -1,14 +1,14 @@
 ---
 - name: Create Terraform Admin role
   ansible.builtin.shell: >
-    pveum role add TerraformAdmin -privs 
-    "VM.Allocate VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU 
-    VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network 
-    VM.Config.Options VM.Monitor VM.Audit VM.PowerMgmt Datastore.Allocate 
+    pveum role add TerraformAdmin -privs
+    "VM.Allocate VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU
+    VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network
+    VM.Config.Options VM.Monitor VM.Audit VM.PowerMgmt Datastore.Allocate
     Datastore.AllocateSpace Datastore.Audit SDN.Use Sys.Audit Sys.Modify"
   register: role_result
-  failed_when: 
-    - role_result.rc != 0 
+  failed_when:
+    - role_result.rc != 0
     - "'already exists' not in role_result.stderr"
   changed_when: role_result.rc == 0
 
@@ -53,7 +53,7 @@
     mkdir -p ../group_vars/proxmox_nodes
     echo "vault_proxmox_token: \"$SECRET\"" > ../group_vars/proxmox_nodes/vault_token.yml
     ansible-vault encrypt ../group_vars/proxmox_nodes/vault_token.yml
-  when: 
+  when:
     - token_output is changed
     - token_output.stdout is defined
     - not pve_create_root_api_token
@@ -62,7 +62,7 @@
   ansible.builtin.shell: "pveum user token add root@pam automation --privsep 0"
   register: root_token_output
   failed_when:
-    - root_token_output.rc != 0 
+    - root_token_output.rc != 0
     - "'already exists' not in root_token_output.stderr"
   changed_when: root_token_output.rc == 0
   when: pve_create_root_api_token

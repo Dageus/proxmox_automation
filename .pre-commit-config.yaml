@@ -1,0 +1,44 @@
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: detect-private-key
+      - id: check-added-large-files
+
+  - repo: local
+    hooks:
+      - id: check-ansible-vault
+        name: check ansible vault encryption
+        entry: |
+          bash -c '
+          for f in "$@"; do
+            if ! head -n 1 "$f" | grep -q "^\$ANSIBLE_VAULT"; then
+              echo "ERROR: $f is not encrypted!"
+              exit 1
+            fi
+          done' --
+        language: system
+        files: '^vault\.yml$'
+        exclude: '\.vault_pass\.txt$'
+
+      - id: forbid-terraform-state
+        name: prevent committing terraform state
+        entry: |
+          bash -c '
+          echo "ERROR: Terraform state files must not be committed! Use a remote backend or ignore them.";
+          exit 1'
+        language: system
+        files: '\.tfstate(\..*)?$'
+
+      - id: forbid-terraform-tfvars
+        name: prevent committing terraform secret vars
+        entry: |
+          bash -c '
+          echo "ERROR: Terraform secret vars must not be committed! Use a remote backend or ignore them.";
+          exit 1'
+        language: system
+        files: '\.tfvars$'

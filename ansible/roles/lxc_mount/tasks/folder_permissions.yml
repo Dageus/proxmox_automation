@@ -1,0 +1,14 @@
+---
+- name: Ensure Application data directory has correct ownership on host
+  ansible.builtin.file:
+    path: /mnt/nas/{{ nfs_export_directory }}
+    owner: "{{ proxmox_lxc_mapped_uid }}"
+    group: "{{ proxmox_lxc_mapped_uid }}"
+    state: directory
+    recurse: yes
+
+- name: Verify mount inside LXC
+  ansible.builtin.command: "pct exec {{ lxc_id }} -- ls {{ lxc_mount_target }}"
+  register: mount_verify
+  changed_when: false
+  failed_when: mount_verify.rc != 0
