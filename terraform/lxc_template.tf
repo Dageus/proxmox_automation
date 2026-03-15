@@ -1,8 +1,8 @@
 resource "proxmox_virtual_environment_container" "docker_template" {
   node_name   = var.proxmox_node
-  vm_id       = 101
+  vm_id       = var.container_docker_template_id
   description = "Debian template with docker pre-installed"
-  tags        = ["template", "terraform"]
+  tags        = ["template", "terraform", "ansible"]
 
 
   unprivileged = true
@@ -19,15 +19,33 @@ resource "proxmox_virtual_environment_container" "docker_template" {
 
   initialization {
     hostname = var.container_docker_template_name
+
+    ip_config {
+      ipv4 {
+        address = "dhcp"
+      }
+    }
+
     user_account {
-      keys     = [file(var.ansible_ssh_key_path)]
+      keys     = [file(var.ssh_public_key_path)]
       password = random_password.template_container_password.result
     }
   }
 
+  network_interface {
+    name = "veth0"
+  }
+
   disk {
     datastore_id = "local"
-    size         = 8
+    size         = 6
+  }
+
+  lifecycle {
+    ignore_changes = [
+      template,
+      started
+    ]
   }
 }
 

@@ -2,8 +2,8 @@
 - name: Ensure Application data directory has correct ownership on host
   ansible.builtin.file:
     path: /mnt/nas/{{ nfs_export_directory }}
-    owner: "{{ proxmox_lxc_mapped_uid }}"
-    group: "{{ proxmox_lxc_mapped_uid }}"
+    owner: "{{ lxc_mapped_uid }}"
+    group: "{{ lxc_mapped_uid }}"
     state: directory
     recurse: yes
 

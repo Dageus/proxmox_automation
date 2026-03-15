@@ -1,0 +1,23 @@
+---
+- name: Prepare Windows NTFS HDDs for Filebrowser Extraction
+  block:
+    - name: Ensure ntfs-3g driver is installed on Proxmox
+      ansible.builtin.apt:
+        name: ntfs-3g
+        state: present
+
+    - name: Mount NTFS HDD1 for extraction
+      ansible.posix.mount:
+        path: /mnt/hdd1
+        src: /dev/sda2
+        fstype: ntfs-3g
+        opts: "ro,uid={{ lxc_mapped_uid }},gid={{ lxc_mapped_uid }},nls=utf8"
+        state: mounted
+
+    - name: Mount NTFS HDD2 for extraction
+      ansible.posix.mount:
+        path: /mnt/hdd2
+        src: /dev/sdb2
+        fstype: ntfs-3g
+        opts: "ro,nofail,uid={{ lxc_mapped_uid }},gid={{ lxc_mapped_uid }},nls=utf8"
+        state: mounted

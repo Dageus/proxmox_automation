@@ -14,10 +14,6 @@ To help with automation, some useful roles were created:
 
 - [qemu_guest_agent](./ansible/roles/qemu_guest_agent/README.md)
 
-### Unstable notes
-
-- Ansible has an unmapped `proxmox_mapped_uid` in [`lxc_mount`](./ansible/roles/lxc_mount/tasks/main.yml)
-
 ## Terraform
 
 To help with automation, a [module](https://developer.hashicorp.com/terraform/language/modules) was created to clone my custom Docker template: [docker_lxc](./terraform/modules/docker_lxc/README.md)
@@ -49,6 +45,10 @@ It will start with:
 2. Ansible configuring it and cleaning up the container ([lxc_template.yml](./ansible/playbooks/lxc_template.yml))
 
 3. Ansible calling back Terraform to fetch the LXC ID and convert it to a template ([lxc_convert_to_template.tf](./terraform/lxc_convert_to_template.tf))
+
+### The Hurdle
+
+Proxmox's API is really strict about enabling `keyctl` and other advanced features on LXC's (that Docker needs) if the user is not `root@pam`, even if you're technically using its API token. So against my better judgement I used direct username/password authentication when performing the templating, but ALL the rest can be done using the API token.
 
 ## Mounting folders
 

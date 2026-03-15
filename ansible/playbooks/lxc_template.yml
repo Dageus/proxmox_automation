@@ -1,9 +1,18 @@
 ---
 - name: Set up LXC Template
-  hosts: template
+  hosts: tag_template
+  gather_facts: false
   become: yes
 
   tasks:
+    - name: Wait for LXC to become reachable over SSH
+      ansible.builtin.wait_for_connection:
+        timeout: 120
+        sleep: 5
+
+    - name: Gather facts (Now that we are connected)
+      ansible.builtin.setup:
+
     - name: Ensure required packages are installed
       ansible.builtin.apt:
         name:
@@ -17,7 +26,7 @@
     - name: Detect OS and architecture for Docker
       ansible.builtin.set_fact:
         docker_distro: "{{ 'debian' }}"
-        docker_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else ansible_architecture }}"
+        docker_arch: "{{ 'amd64' if ansible_facts['architecture'] == 'x86_64' else 'arm64' if ansible_facts['architecture'] == 'aarch64' else ansible_facts['architecture'] }}"
 
     - name: Create directory for GPG keyrings
       ansible.builtin.file:
@@ -111,10 +120,6 @@
         find /var/log -type f -exec truncate -s 0 {} \;
         rm -rf /var/log/journal/* 2>/dev/null || true
 
-        # Clear temporary files
-        rm -rf /tmp/* 2>/dev/null || true
-        rm -rf /var/tmp/* 2>/dev/null || true
-
         # Clear bash history
         rm -f /root/.bash_history
         find /home -name ".bash_history" -delete 2>/dev/null || true
@@ -133,10 +138,9 @@
       become: yes
       block:
         - name: Stop the LXC container
-          ansible.builtin.command: "pct stop {{ vmid }}"
-          # vmid should be passed as an extra-var or defined in your inventory
+          ansible.builtin.command: "pct stop {{ proxmox_vmid }}"
 
         - name: Convert LXC to Template
-          ansible.builtin.command: "pct template {{ vmid }}"
+          ansible.builtin.command: "pct template {{ proxmox_vmid }}"
           register: template_result
           changed_when: "'already a template' not in template_result.stderr"

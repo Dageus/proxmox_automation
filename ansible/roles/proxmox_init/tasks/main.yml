@@ -15,6 +15,8 @@
     - hibernate.target
     - hybrid-sleep.target
 
+- include_tasks: mounts.yml
+
 - include_tasks: repository.yml
   when: pve_manage_repos | default(false)
 

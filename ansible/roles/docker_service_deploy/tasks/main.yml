@@ -19,12 +19,9 @@
 
 - name: Copy docker-compose and env files
   copy:
-    src: "{{ item }}"
+    src: "{{ app_config_path }}/{{ service_name }}/"
     dest: /opt/{{ service_name }}/
     mode: '0600'
-  with_fileglob:
-    - "{{ app_config_base_path }}/{{ service_name }}/*"
-    - "{{ app_config_base_path }}/{{ service_name }}/.*"
 
 - name: Deploy the containers via docker compose
   community.docker.docker_compose_v2:

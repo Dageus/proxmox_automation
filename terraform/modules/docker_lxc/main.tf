@@ -26,11 +26,6 @@ resource "proxmox_virtual_environment_container" "container" {
   initialization {
     hostname = var.container.name
 
-    user_account {
-      keys = [file(var.ansible_ssh_key_path)]
-      password = var.container.password
-    }
-
     ip_config {
       ipv4 {
         address = "192.168.1.2${substr(var.container.vm_id, -2, 2)}/24"
@@ -65,6 +60,14 @@ resource "proxmox_virtual_environment_container" "container" {
     for_each = var.gpu_passthrough ? toset(var.gpu_devices) : []
     content {
       path = device_passthrough.value
+    }
+  }
+
+  dynamic "mount_point" {
+    for_each = var.container.mount_points
+    content {
+      volume = mount_point.value.volume
+      path   = mount_point.value.path
     }
   }
 }

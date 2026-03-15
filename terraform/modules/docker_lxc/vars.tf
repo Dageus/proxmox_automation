@@ -15,11 +15,6 @@ variable "proxmox_clone_node" {
   default     = "pve"
 }
 
-variable "ssh_public_key_path" {
-  type        = string
-  description = "Public SSH Key of the Ansible user"
-}
-
 variable "gpu_passthrough" {
   type        = bool
   description = "Whether to mount Intel GPU render devices into the container"
@@ -39,6 +34,9 @@ variable "container" {
     memory    = number
     disk_size = number
     tags      = list(string)
-    password  = optional(string)
+    mount_points = optional(list(object({
+      volume = string
+      path   = string
+    })), [])
   })
 }

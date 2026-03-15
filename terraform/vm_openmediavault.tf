@@ -74,7 +74,7 @@ resource "proxmox_virtual_environment_vm" "openmediavault" {
 
     user_account {
       username = "root"
-      keys     = [file(var.ansible_ssh_key_path)]
+      keys     = [file(var.ssh_public_key_path)]
       password = "root"
 
     }

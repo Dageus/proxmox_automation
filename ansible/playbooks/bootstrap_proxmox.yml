@@ -4,5 +4,5 @@
   roles:
     - role: proxmox_init
       vars:
-        pve_remove_local_lvm: false
+        pve_remove_local_lvm: true
         pve_create_root_api_token: true

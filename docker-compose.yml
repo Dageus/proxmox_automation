@@ -4,6 +4,7 @@ services:
     network_mode: "host"
     volumes:
       - .:/infrastructure
+      - /home/jomouzio/Desktop/projects/homelab:/workspace
     environment:
       - ANSIBLE_CONFIG=/infrastructure/ansible/ansible.cfg
     stdin_open: true

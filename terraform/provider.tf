@@ -17,7 +17,7 @@ provider "proxmox" {
   insecure = true
 
   # API Token
-  api_token = var.proxmox_api_token
+  # api_token = var.proxmox_api_token
 
   # Auth Ticket
   # auth_ticket = var.proxmox_auth_ticket
@@ -25,7 +25,7 @@ provider "proxmox" {
 
   # Username/Password
   username = var.proxmox_user_name
-  # password = var.proxmox_user_password
+  password = var.proxmox_user_password
 
   ssh {
     agent = true

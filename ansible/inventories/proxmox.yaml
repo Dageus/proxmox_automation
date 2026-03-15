@@ -2,22 +2,23 @@
 plugin: community.proxmox.proxmox
 url: "https://192.168.1.93:8006"
 user: "root@pam"
-password: "WHRKZFRuKL3242"
-
-# user: "terraform-prov@pve"
-# password: "{{ lookup('env', 'PVE_PASSWORD') }}"
-# password: "{{ vault_pve_root_password }}"
-
-# token_id: "terraform-token"
-# token_value: "{{ vault_proxmox_token }}"
+token_id: "automation"
+token_secret: "c0ed3070-0827-4ac3-a9bb-abaad5617223"
 
 validate_certs: false
-
-filters:
-  - status == "running"
-
+want_facts: true
 want_proxmox_nodes_ansible_host: true
 
-group_by:
-  - type   # Creates groups 'lxc' and 'qemu'
-  - tags   # Creates groups like 'proxmox_tags_media'
+filters:
+  - proxmox_status == "running"
+  - template == false
+
+strict: false
+keyed_groups:
+  - prefix: tag
+    key: proxmox_tags_parsed
+  - prefix: type
+    key: proxmox_vmtype
+
+compose:
+  ansible_host: proxmox_lxc_interfaces[1].inet | split('/') | first
