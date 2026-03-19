@@ -17,7 +17,7 @@
     - name: Mount NTFS HDD2 for extraction
       ansible.posix.mount:
         path: /mnt/hdd2
-        src: /dev/sdb2
+        src: /dev/sdb1
         fstype: ntfs-3g
         opts: "ro,nofail,uid={{ lxc_mapped_uid }},gid={{ lxc_mapped_uid }},nls=utf8"
         state: mounted

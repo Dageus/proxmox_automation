@@ -17,6 +17,9 @@
 
 - include_tasks: mounts.yml
 
+- include_tasks: ups.yml
+  when: pve_configure_ups | default(false)
+
 - include_tasks: repository.yml
   when: pve_manage_repos | default(false)
 

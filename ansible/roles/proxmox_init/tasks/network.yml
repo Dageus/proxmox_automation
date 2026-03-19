@@ -1,28 +1,19 @@
 ---
-- name: Ensure vmbr1 configuration exists in interfaces file
-  blockinfile:
-    path: /etc/network/interfaces
-    marker: "# {mark} ANSIBLE MANAGED BLOCK: vmbr1 NAT"
-    block: |
-      auto vmbr1
-      iface vmbr1 inet static
-          address 10.10.10.1/24
-          bridge-ports none
-          bridge-stp none
-          bridge-fd 0
-          post-up echo 1 > /proc/sys/net/ipv4/ip_forward
-          post-up iptables -t nat -A POSTROUTING -s '10.100.0.0/24' -o vmbr0 -j MASQUERADE
-          post-down iptables -t nat -D POSTROUTING -s '10.100.0.0/24' -o vmbr0 -j MASQUERADE
+- name: Deploy dynamic Proxmox network configuration
+  ansible.builtin.template:
+    src: templates/interfaces_aoostar.j2
+    dest: /etc/network/interfaces
+    backup: yes
   register: network_config
 
-- name: Enable IP Forwarding
-  sysctl:
+- name: Enable global IP Forwarding for NAT routing
+  ansible.posix.sysctl:
     name: net.ipv4.ip_forward
-    value: 1
-    sysctl_set: true
+    value: '1'
+    sysctl_set: yes
     state: present
-    reload: true
+    reload: yes
 
-- name: Apply network changes
-  shell: ifup vmbr1
+- name: Apply network changes instantly
+  ansible.builtin.command: ifreload -a
   when: network_config.changed

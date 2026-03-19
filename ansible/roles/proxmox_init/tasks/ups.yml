@@ -1,0 +1,46 @@
+---
+- name: Install Network UPS Tools (NUT)
+  ansible.builtin.apt:
+    name: nut
+    state: present
+    update_cache: yes
+
+- name: Set NUT to Standalone Mode
+  ansible.builtin.lineinfile:
+    path: /etc/nut/nut.conf
+    regexp: '^MODE='
+    line: 'MODE=standalone'
+
+- name: Configure the Eaton USB Driver
+  ansible.builtin.blockinfile:
+    path: /etc/nut/ups.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - EATON 5E"
+    block: |
+      [eaton]
+        driver = usbhid-ups
+        port = auto
+        desc = "Eaton 5E UPS"
+
+- name: Create local UPS daemon user
+  ansible.builtin.blockinfile:
+    path: /etc/nut/upsd.users
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - UPSD USER"
+    block: |
+      [upsmon]
+        password = {{ vault_pve_ups_password }}
+        upsmon master
+
+- name: Point the Monitor at the Server
+  ansible.builtin.lineinfile:
+    path: /etc/nut/upsmon.conf
+    regexp: '^MONITOR '
+    line: 'MONITOR eaton@localhost 1 upsmon {{ vault_pve_ups_password }} master'
+
+- name: Enable and restart NUT services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: restarted
+    enabled: yes
+  loop:
+    - nut-server
+    - nut-client
