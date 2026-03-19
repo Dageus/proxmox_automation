@@ -6,3 +6,4 @@
       vars:
         pve_remove_local_lvm: true
         pve_create_root_api_token: true
+        pve_configure_ups: false

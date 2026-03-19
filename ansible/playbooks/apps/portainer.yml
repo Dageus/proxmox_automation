@@ -1,6 +1,6 @@
 ---
-- name: Download and deploy Vikunja
-  hosts: vikunja
+- name: Download and deploy Portainer
+  hosts: portainer
   become: yes
 
   tasks:
@@ -11,14 +11,14 @@
       tags:
         - [update]
 
-    - name: Deploy Portainer Agent
+    - name: Deploy Portainer
       include_role:
         name: docker_service_deploy
       vars:
         service_name: portainer_agent
 
-    - name: Deploy vikunja
+    - name: Deploy Watchtower (community fork)
       include_role:
         name: docker_service_deploy
       vars:
-        service_name: vikunja
+        service_name: watchtower

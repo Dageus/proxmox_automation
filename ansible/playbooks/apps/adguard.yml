@@ -1,0 +1,54 @@
+---
+- name: Download and deploy AdGuard Home + Tailscale
+  hosts: adguard
+  become: yes
+
+  tasks:
+    - name: Ensure system is up to date
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: yes
+      tags:
+        - [update]
+
+    - name: Deploy Portainer Agent
+      include_role:
+        name: docker_service_deploy
+      vars:
+        service_name: portainer_agent
+
+    - name: Configure Proxmox LXC for TUN device passthrough
+      block:
+        - name: Inject TUN device passthrough into LXC config
+          ansible.builtin.blockinfile:
+            path: "/etc/pve/lxc/{{ proxmox_vmid }}.conf"
+            marker: "# {mark} ANSIBLE MANAGED BLOCK - TUN PASSTHROUGH"
+            block: |
+              lxc.cgroup2.devices.allow: c 10:200 rwm
+              lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
+          delegate_to: pve
+
+        - name: Restart LXC to apply TUN device passthrough
+          ansible.builtin.command: "pct restart {{ proxmox_vmid }}"
+          delegate_to: pve
+
+    - name: Wait for LXC to finish rebooting
+      ansible.builtin.wait_for_connection:
+        delay: 5
+        timeout: 60
+
+    - name: Enable IP Forwarding inside LXC
+      include_role:
+        name: enable_routing
+
+    - name: Deploy Tailscale
+      include_role:
+        name: docker_service_deploy
+      vars:
+        service_name: tailscale
+
+    - name: Deploy AdGuard Home
+      include_role:
+        name: docker_service_deploy
+      vars:
+        service_name: adguardhome

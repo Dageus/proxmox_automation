@@ -1,0 +1,30 @@
+---
+- name: Download and deploy qBittorrent + gluetun
+  hosts: qbittorrent
+  become: yes
+
+  tasks:
+    - name: Ensure system is up to date
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: yes
+      tags:
+        - [update]
+
+    - name: Deploy Portainer Agent
+      include_role:
+        name: docker_service_deploy
+      vars:
+        service_name: portainer_agent
+
+    - name: Deploy gluetun
+      include_role:
+        name: docker_service_deploy
+      vars:
+        service_name: gluetun
+
+    - name: Deploy qbittorrent
+      include_role:
+        name: docker_service_deploy
+      vars:
+        service_name: qbittorrent
