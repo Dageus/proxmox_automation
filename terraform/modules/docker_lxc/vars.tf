@@ -30,7 +30,7 @@ variable "gpu_devices" {
 variable "container" {
   type = object({
     name      = string
-    vm_id     = number
+    vm_id     = optional(number)
     memory    = number
     disk_size = number
     tags      = list(string)

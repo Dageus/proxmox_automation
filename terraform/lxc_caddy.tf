@@ -5,9 +5,8 @@ module "caddy" {
 
   container = {
     name      = "caddy"
-    vm_id     = 118
-    memory    = 2048
-    disk_size = 8
-    tags      = ["terraform", "docker"]
+    memory    = 1024
+    disk_size = 6
+    tags      = ["terraform", "ansible", "docker", "proxy"]
   }
 }

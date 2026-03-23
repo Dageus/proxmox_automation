@@ -5,9 +5,8 @@ module "byte_stash" {
 
   container = {
     name      = "bytestash"
-    vm_id     = 120
-    memory    = 2048
+    memory    = 512
     disk_size = 8
-    tags      = ["terraform", "finance", "docker"]
+    tags      = ["terraform", "ansible", "docker"]
   }
 }

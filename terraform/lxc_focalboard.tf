@@ -5,9 +5,8 @@ module "focalboard" {
 
   container = {
     name      = "focalboard",
-    vm_id     = 118
     memory    = 256
-    disk_size = 8
-    tags      = ["terraform", "docker"]
+    disk_size = 6
+    tags      = ["terraform", "ansible", "docker"]
   }
 }

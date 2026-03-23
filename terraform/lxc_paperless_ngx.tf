@@ -5,9 +5,8 @@ module "paperless_ngx" {
 
   container = {
     name      = "paperless_ngx"
-    vm_id     = 121
     memory    = 2048
-    disk_size = 8
-    tags      = ["terraform", "media", "docker"]
+    disk_size = 20
+    tags      = ["terraform", "ansible", "docker", "media"]
   }
 }

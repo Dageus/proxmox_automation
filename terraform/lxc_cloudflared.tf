@@ -5,9 +5,8 @@ module "cloudflared" {
 
   container = {
     name      = "cloudflared"
-    vm_id     = 101
-    memory    = 2048
-    disk_size = 8
-    tags      = ["terraform", "cloudflare", "docker"]
+    memory    = 512
+    disk_size = 6
+    tags      = ["terraform", "ansible", "docker", "cloudflare", "tunnel"]
   }
 }

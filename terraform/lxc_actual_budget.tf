@@ -5,28 +5,8 @@ module "actual_budget" {
 
   container = {
     name      = "actual-budget"
-    vm_id     = 118
-    memory    = 2048
-    disk_size = 8
-    tags      = ["terraform", "finance", "docker"]
-  }
-}
-
-resource "null_resource" "run_ansible_actual_budget" {
-  depends_on = [module.actual_budget]
-
-  triggers = {
-    vm_id = "118"
-  }
-
-  provisioner "local-exec" {
-    command = <<-EOT
-      sleep 5
-
-      ansible-playbook -i infrastructure/ansible/inventory.ini \
-        infrastructure/ansible/deploy_actual_budget.yml \
-        --vault-password-file .vault_pass.txt \
-        -e "target_host=192.168.1.218"
-    EOT
+    memory    = 1024
+    disk_size = 6
+    tags      = ["terraform", "ansible", "docker", "finance"]
   }
 }

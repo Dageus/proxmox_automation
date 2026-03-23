@@ -1,7 +1,6 @@
 resource "proxmox_virtual_environment_vm" "openmediavault" {
   node_name       = "pve"
   name            = "openmediavault"
-  vm_id           = 201
   stop_on_destroy = true
 
   tags = ["nas", "terraform_provisioned"]
@@ -12,7 +11,7 @@ resource "proxmox_virtual_environment_vm" "openmediavault" {
   }
 
   startup {
-    order      = "2"
+    order      = "0"
     up_delay   = "60"
     down_delay = "60"
   }

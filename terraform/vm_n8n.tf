@@ -1,9 +1,9 @@
-resource "proxmox_virtual_environment_vm" "nixos" {
+resource "proxmox_virtual_environment_vm" "n8n" {
   node_name       = var.proxmox
-  name            = "nix-playground"
+  name            = "n8n"
   stop_on_destroy = true
 
-  tags = ["playground", "terraform"]
+  tags = ["terraform", "ansible", "cloud-init", "ai"]
 
   agent {
     enabled = true
@@ -34,7 +34,7 @@ resource "proxmox_virtual_environment_vm" "nixos" {
 
   disk {
     datastore_id = "local"
-    import_from  = proxmox_virtual_environment_download_file.nixos_image.id
+    import_from  = proxmox_virtual_environment_download_file.debian_cloud_image.id
     interface    = "scsi0"
     size         = 20
   }
