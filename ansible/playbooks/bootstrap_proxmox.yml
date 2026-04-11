@@ -1,6 +1,8 @@
 ---
 - name: Initialize Proxmox Cluster
   hosts: proxmox_nodes
+  vars_files:
+    - ../shared_config.yml
   roles:
     - role: proxmox_init
       vars:

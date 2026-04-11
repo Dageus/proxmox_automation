@@ -23,6 +23,10 @@ To help with automation, some useful roles were created:
 
 To help with automation, a [module](https://developer.hashicorp.com/terraform/language/modules) was created to clone my custom Docker template: [docker_lxc](./terraform/modules/docker_lxc/README.md)
 
+## Shared Variables
+
+Sometimes, I need to share variables between Ansible and Terraform, and since both of them "speak" YAML, I created a [shared_vars](./shared_vars.yaml) file to declare them.
+
 ### Unstable notes
 
 - `gpu_devices` in the [`docker_lxc`](./terraform/modules/docker_lxc/vars.tf) is an insane rawdog. If I change CPU's this might break.

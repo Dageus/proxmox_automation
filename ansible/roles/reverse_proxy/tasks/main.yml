@@ -1,0 +1,9 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Generate dynamic Caddyfile from Proxmox inventory
+  ansible.builtin.template:
+    src: templates/Caddyfile.j2
+    dest: /etc/caddy/Caddyfile
+    mode: '0644'
+  notify: Reload Caddy
+

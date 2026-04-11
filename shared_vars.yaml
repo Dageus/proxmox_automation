@@ -1,0 +1,7 @@
+# NOTE: this is where we'll dump common variables between Terraform and Ansible
+storage_devices:
+  - name: "app_ssd"
+    id: "usb-WD_Blue_SN5000_1TB_012345678923-0:0"
+    path: "/mnt/ssd"
+    fstype: "ext4"
+    datastore_name: "SSD_Storage"

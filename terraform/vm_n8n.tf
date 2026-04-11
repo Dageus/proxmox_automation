@@ -24,8 +24,8 @@ resource "proxmox_virtual_environment_vm" "n8n" {
   }
 
   memory {
-    dedicated = 1024
-    floating  = 1024
+    dedicated = 2048
+    floating  = 2048
   }
 
   serial_device {
@@ -36,7 +36,7 @@ resource "proxmox_virtual_environment_vm" "n8n" {
     datastore_id = "local"
     import_from  = proxmox_virtual_environment_download_file.debian_cloud_image.id
     interface    = "scsi0"
-    size         = 20
+    size         = 10
   }
 
   # Network Interface for LAN

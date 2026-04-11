@@ -1,23 +1,42 @@
 ---
-- name: Prepare Windows NTFS HDDs for Filebrowser Extraction
-  block:
-    - name: Ensure ntfs-3g driver is installed on Proxmox
-      ansible.builtin.apt:
-        name: ntfs-3g
-        state: present
+- name: Ensure mount points exist
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: '0755'
+  loop: "{{ storage_devices }}"
 
-    - name: Mount NTFS HDD1 for extraction
-      ansible.posix.mount:
-        path: /mnt/hdd1
-        src: /dev/sda2
-        fstype: ntfs-3g
-        opts: "ro,uid={{ lxc_mapped_uid }},gid={{ lxc_mapped_uid }},nls=utf8"
-        state: mounted
+- name: Create filesystem on devices
+  community.general.filesystem:
+    fstype: "{{ item.fstype }}"
+    dev: "/dev/disk/by-id/{{ item.id }}"
+    force: no
+  loop: "{{ storage_devices }}"
 
-    - name: Mount NTFS HDD2 for extraction
-      ansible.posix.mount:
-        path: /mnt/hdd2
-        src: /dev/sdb1
-        fstype: ntfs-3g
-        opts: "ro,nofail,uid={{ lxc_mapped_uid }},gid={{ lxc_mapped_uid }},nls=utf8"
-        state: mounted
+- name: Mount storage devices by ID (Stable)
+  ansible.posix.mount:
+    path: "{{ item.path }}"
+    src: "/dev/disk/by-id/{{ item.id }}"
+    fstype: "{{ item.fstype }}"
+    opts: "defaults,nofail"
+    state: mounted
+  loop: "{{ storage_devices }}"
+  register: disk_mounts
+
+- name: Show mount status
+  ansible.builtin.debug:
+    msg: "Device {{ item.item.name }} mounted at {{ item.item.path }}"
+  loop: "{{ disk_mounts.results }}"
+  when: item.changed
+
+- name: Register devices as Proxmox Datastores
+  ansible.builtin.command: >
+    pvesm add dir {{ item.datastore_name }}
+    --path {{ item.path }}
+    --content images,rootdir
+  loop: "{{ storage_devices }}"
+  register: pvesm_result
+  failed_when:
+    - pvesm_result.rc != 0
+    - "'already exists' not in pvesm_result.stderr"
+  changed_when: pvesm_result.rc == 0
