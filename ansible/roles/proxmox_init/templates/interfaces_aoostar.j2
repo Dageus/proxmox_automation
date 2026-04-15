@@ -2,27 +2,26 @@
 auto lo
 iface lo inet loopback
 
-{% set physical_nics = ansible_interfaces | select('match', '^en[op]') | list | sort %}
+iface nic0 inet manual
 
-{% for nic in physical_nics %}
-iface {{ nic }} inet manual
-{% endfor %}
+iface nic1 inet manual
 
 auto bond0
 iface bond0 inet manual
-        bond-slaves {{ physical_nics | join(' ') }}
+        bond-slaves nic0 nic1
         bond-miimon 100
-        bond-mode balance-alb
+        bond-mode active-backup
+        bond-primary nic0
 
 auto vmbr0
 iface vmbr0 inet static
-				address {{ ansible_default_ipv4.address }}
+        address 192.168.1.93
         netmask {{ ansible_default_ipv4.netmask }}
         gateway {{ ansible_default_ipv4.gateway }}
         bridge-ports bond0
         bridge-stp off
         bridge-fd 0
-				bridge-vlan-aware yes
+			  bridge-vlan-aware yes
 
 iface wlp4s0 inet manual
 
@@ -35,5 +34,5 @@ iface vmbr1 inet static
         bridge-stp none
         bridge-fd 0
         post-up echo 1 > /proc/sys/net/ipv4/ip_forward
-        post-up iptables -t nat -A POSTROUTING -s '10.100.0.0/24' -o vmbr0 -j MASQUERADE
-        post-down iptables -t nat -D POSTROUTING -s '10.100.0.0/24' -o vmbr0 -j MASQUERADE
+        post-up iptables -t nat -A POSTROUTING -s '10.10.10.0/24' -o vmbr0 -j MASQUERADE
+        post-down iptables -t nat -D POSTROUTING -s '10.10.10.0/24' -o vmbr0 -j MASQUERADE

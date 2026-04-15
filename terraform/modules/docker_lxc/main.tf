@@ -28,15 +28,15 @@ resource "proxmox_virtual_environment_container" "container" {
 
     ip_config {
       ipv4 {
-        address = "192.168.1.2${substr(var.container.vm_id, -2, 2)}/24"
+        address = "192.168.1.${var.container.ip_suffix}/24"
         gateway = "192.168.1.1"
       }
     }
 
     ip_config {
       ipv4 {
-        address = "10.150.0.${var.container.vm_id}/16"
-        # gateway = "10.150.0.1"
+        address = "10.10.10.${var.container.ip_suffix}/16"
+        # gateway = "10.10.10.1"
       }
     }
   }
@@ -68,6 +68,13 @@ resource "proxmox_virtual_environment_container" "container" {
     content {
       volume = mount_point.value.volume
       path   = mount_point.value.path
+    }
+  }
+
+  dynamic "device_passthrough" {
+    for_each = var.enable_tun ? [1] : []
+    content {
+      path = "/dev/net/tun"
     }
   }
 }

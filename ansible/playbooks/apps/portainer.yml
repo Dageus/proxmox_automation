@@ -9,13 +9,13 @@
         upgrade: dist
         update_cache: yes
       tags:
-        - [update]
+        - update
 
     - name: Deploy Portainer
       include_role:
         name: docker_service_deploy
       vars:
-        service_name: portainer_agent
+        service_name: portainer
 
     - name: Deploy Watchtower (community fork)
       include_role:

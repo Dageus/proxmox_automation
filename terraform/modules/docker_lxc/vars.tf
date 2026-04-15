@@ -23,14 +23,21 @@ variable "gpu_passthrough" {
 
 variable "gpu_devices" {
   type        = list(string)
-  default     = ["/dev/dri/renderD128", "/dev/dri/card0"]
+  default     = ["/dev/dri/renderD128", "/dev/dri/card1"]
   description = "List of GPU device paths to mount if passthrough is enabled"
+}
+
+variable "enable_tun" {
+  type        = bool
+  description = "Enable TUN device for VPNs (WireGuard, Gluetun, Tailscale)"
+  default     = false
 }
 
 variable "container" {
   type = object({
     name      = string
     vm_id     = optional(number)
+    ip_suffix = string
     memory    = number
     disk_size = number
     tags      = list(string)

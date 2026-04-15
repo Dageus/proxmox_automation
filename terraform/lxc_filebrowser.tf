@@ -1,22 +1,16 @@
 module "filebrowser" {
   source = "./modules/docker_lxc"
 
+  # NOTE: disabling this resource
+  count = 0
+
   lxc_template_vm_id = var.container_docker_template_id
 
   container = {
     name      = "filebrowser"
     memory    = 1024
+    ip_suffix = "228"
     disk_size = 6
     tags      = ["terraform", "ansible", "docker", "media", "external_disk"]
-    mount_points = [
-      {
-        volume = "/mnt/hdd1"
-        path   = "/data/drive1"
-      },
-      {
-        volume = "/mnt/hdd2"
-        path   = "/data/drive2"
-      }
-    ]
   }
 }

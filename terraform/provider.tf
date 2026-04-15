@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "bpg/proxmox"
-      version = "~> 0.96.0"
+      version = "0.102.0"
     }
     null = {
       source  = "hashicorp/null"
@@ -30,5 +30,6 @@ provider "proxmox" {
   ssh {
     agent = true
     username = "root"
+    private_key = file("../.ssh/ansible")
   }
 }

@@ -1,6 +1,6 @@
 ---
-- name: Download and deploy qBittorrent + gluetun
-  hosts: qbittorrent
+- name: Download and deploy RomM
+  hosts: portainer
   become: yes
 
   tasks:
@@ -9,7 +9,7 @@
         upgrade: dist
         update_cache: yes
       tags:
-        - [update]
+        - update
 
     - name: Deploy Portainer Agent
       include_role:
@@ -17,14 +17,8 @@
       vars:
         service_name: portainer_agent
 
-    - name: Deploy gluetun
+    - name: Deploy RomM
       include_role:
         name: docker_service_deploy
       vars:
-        service_name: gluetun
-
-    - name: Deploy qbittorrent
-      include_role:
-        name: docker_service_deploy
-      vars:
-        service_name: qbittorrent
+        service_name: romm

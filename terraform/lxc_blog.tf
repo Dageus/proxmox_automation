@@ -5,7 +5,8 @@ module "blog" {
 
   container = {
     name      = "blog"
-    memory    = 1024
+    ip_suffix = "212"
+    memory    = 512
     disk_size = 6
     tags      = ["terraform", "ansible", "docker"]
   }

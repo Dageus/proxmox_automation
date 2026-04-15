@@ -5,6 +5,7 @@ module "caddy" {
 
   container = {
     name      = "caddy"
+    ip_suffix = "214"
     memory    = 1024
     disk_size = 6
     tags      = ["terraform", "ansible", "docker", "proxy"]

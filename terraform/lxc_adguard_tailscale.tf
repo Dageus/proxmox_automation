@@ -5,6 +5,7 @@ module "adguard" {
 
   container = {
     name      = "adguard"
+    ip_suffix = "211"
     memory    = 1024
     disk_size = 6
     tags      = ["terraform", "ansible", "docker", "vpn"]

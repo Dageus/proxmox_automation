@@ -40,12 +40,12 @@
         dest: /etc/ansible_facts.d/omv_installed.fact
         content: '{"installed": true}'
       when: omv_install is changed
----
-- name: Configure OpenMediaVault
-  hosts: omv
-  become: yes
-
-  tasks:
-    - name: Mount filesystem to external SSD
-      ansible.builtin.debug:
-        msg: "Unimplemented"
+# ---
+# - name: Configure OpenMediaVault
+#   hosts: omv
+#   become: yes
+#
+#   tasks:
+#     - name: Mount filesystem to external SSD
+#       ansible.builtin.debug:
+#         msg: "Unimplemented"

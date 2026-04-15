@@ -1,4 +1,7 @@
 resource "proxmox_virtual_environment_vm" "openmediavault" {
+  # NOTE: hack to disable this resource
+  count = 0
+
   node_name       = "pve"
   name            = "openmediavault"
   stop_on_destroy = true
@@ -38,7 +41,7 @@ resource "proxmox_virtual_environment_vm" "openmediavault" {
   # Main system disk from Debian cloud image
   disk {
     datastore_id = "local"
-    import_from  = proxmox_virtual_environment_download_file.debian_cloud_image.id
+    import_from  = proxmox_download_file.debian_cloud_image.id
     interface    = "virtio0"
     iothread     = true
     discard      = "on"
@@ -80,15 +83,13 @@ resource "proxmox_virtual_environment_vm" "openmediavault" {
 
     ip_config {
       ipv4 {
-        address = "192.168.1.212/24"
-        gateway = "192.168.1.1"
+        address = "dhcp"
       }
     }
 
     ip_config {
       ipv4 {
-        address = "10.150.0.201/24"
-        gateway = "10.150.0.1"
+        address = "10.10.10.200/24"
       }
     }
   }

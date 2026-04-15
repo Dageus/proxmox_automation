@@ -1,0 +1,6 @@
+{{ subdomain }}.{{ domain }} {
+    tls {
+        dns cloudflare {env.CF_API_TOKEN}
+    }
+    reverse_proxy {{ app_ip }}:{{ app_port }}
+}

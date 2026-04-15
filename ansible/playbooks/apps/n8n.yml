@@ -1,6 +1,6 @@
 ---
-- name: Download and deploy Glance
-  hosts: glance
+- name: Download and deploy n8n
+  hosts: n8n
   become: yes
 
   tasks:
@@ -17,8 +17,8 @@
       vars:
         service_name: portainer_agent
 
-    - name: Deploy glance
+    - name: Deploy n8n
       include_role:
         name: docker_service_deploy
       vars:
-        service_name: glance
+        service_name: n8n

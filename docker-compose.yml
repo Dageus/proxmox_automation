@@ -7,5 +7,6 @@ services:
       - /home/jomouzio/Desktop/projects/homelab:/workspace
     environment:
       - ANSIBLE_CONFIG=/infrastructure/ansible/ansible.cfg
+      - APP_PATH=/workspace/services
     stdin_open: true
     tty: true

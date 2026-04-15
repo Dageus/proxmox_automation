@@ -5,18 +5,15 @@ module "syncthing" {
 
   container = {
     name      = "syncthing"
+    ip_suffix = "224"
     memory    = 512
     disk_size = 6
     tags      = ["terraform", "ansible", "docker", "media", "external_disk"]
     mount_points = [
       {
-        volume = "drive1"
-        path   = "mounted_drive1"
+        volume = "/mnt/ssd/syncthing"
+        path   = "/mnt/syncthing_data"
       },
-      {
-        volume = "drive2"
-        path   = "mounted_drive2"
-      }
     ]
   }
 }

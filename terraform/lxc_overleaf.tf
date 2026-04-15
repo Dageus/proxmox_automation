@@ -5,6 +5,7 @@ module "overleaf" {
 
   container = {
     name      = "overleaf"
+    ip_suffix = "230"
     memory    = 2048
     disk_size = 20
     tags      = ["terraform", "ansible", "docker"]

@@ -5,6 +5,22 @@
 ![Ansible](https://img.shields.io/badge/ansible-%231A1918.svg?style=for-the-badge&logo=ansible&logoColor=white)
 ![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white)
 
+## Running the docker runner
+
+```
+docker compose run --rm runner
+```
+
+### Preparing the Proxmox Host
+
+Use:
+
+```
+ssh-copy-id -i /path/to/ssh-key root@<host_ip>
+```
+
+To add you SSH key to the known_hosts of the pve host.
+
 ## Ansible
 
 To help with automation, some useful roles were created:
@@ -30,6 +46,8 @@ Sometimes, I need to share variables between Ansible and Terraform, and since bo
 ### Unstable notes
 
 - `gpu_devices` in the [`docker_lxc`](./terraform/modules/docker_lxc/vars.tf) is an insane rawdog. If I change CPU's this might break.
+
+- For Windows VM, have an `assets/` folder with the ISO inside it and update it on [`vm_windows.tf`](./terraform/wm_windows.tf)
 
 - VM's are not well tackled yet (will get to it once the *arr stack is deployed)
 

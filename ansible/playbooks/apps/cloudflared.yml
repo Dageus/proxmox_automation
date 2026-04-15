@@ -9,7 +9,7 @@
         upgrade: dist
         update_cache: yes
       tags:
-        - [update]
+        - update
 
     - name: Deploy Portainer Agent
       include_role:

@@ -1,22 +1,22 @@
-module "immich" {
+module "arr_stack" {
   source = "./modules/docker_lxc"
 
   lxc_template_vm_id = var.container_docker_template_id
 
-  gpu_passthrough = true
+  enable_tun = true
 
   container = {
-    name      = "immich",
-    ip_suffix = "218"
+    name      = "arr-stack",
+    ip_suffix = "227"
     memory    = 2048
-    disk_size = 6
+    disk_size = 8
     tags      = ["terraform", "ansible", "docker", "media", "external_disk"]
     mount_points = [
       {
         # The path on the Proxmox Host
-        volume = "/mnt/ssd/immich"
+        volume = "/mnt/ssd/arr/"
         # Where it appears INSIDE the LXC
-        path   = "/immich_data"
+        path   = "/data"
       }
     ]
   }

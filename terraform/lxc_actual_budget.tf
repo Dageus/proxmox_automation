@@ -5,7 +5,8 @@ module "actual_budget" {
 
   container = {
     name      = "actual-budget"
-    memory    = 1024
+    ip_suffix = "210"
+    memory    = 512
     disk_size = 6
     tags      = ["terraform", "ansible", "docker", "finance"]
   }

@@ -5,3 +5,29 @@ storage_devices:
     path: "/mnt/ssd"
     fstype: "ext4"
     datastore_name: "SSD_Storage"
+
+storage_folders:
+  # Storage apps
+  - "/mnt/ssd/immich"
+  - "/mnt/ssd/nextcloud"
+  - "/mnt/ssd/paperless"
+  - "/mnt/ssd/romm"
+  - "/mnt/ssd/syncthing"
+  # *arr stack (following TRaSH guides)
+  - "/mnt/ssd/arr"
+
+  # parent folders
+  - "/mnt/ssd/arr/media"
+  - "/mnt/ssd/arr/torrents"
+
+  # media
+  - "/mnt/ssd/arr/media/books"
+  - "/mnt/ssd/arr/media/movies"
+  - "/mnt/ssd/arr/media/music"
+  - "/mnt/ssd/arr/media/tv"
+
+  # torrents
+  - "/mnt/ssd/arr/torrents/books"
+  - "/mnt/ssd/arr/torrents/movies"
+  - "/mnt/ssd/arr/torrents/music"
+  - "/mnt/ssd/arr/torrents/tv"

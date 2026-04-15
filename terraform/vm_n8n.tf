@@ -1,5 +1,23 @@
+resource "proxmox_virtual_environment_file" "qemu_agent_install" {
+  content_type = "snippets"
+  datastore_id = "local"
+  node_name    = "pve"
+
+  source_raw {
+    data = <<EOF
+#cloud-config
+packages:
+  - qemu-guest-agent
+runcmd:
+  - systemctl enable qemu-guest-agent
+  - systemctl start qemu-guest-agent
+EOF
+    file_name = "install-qemu-agent.yaml"
+  }
+}
+
 resource "proxmox_virtual_environment_vm" "n8n" {
-  node_name       = var.proxmox
+  node_name       = var.proxmox_node
   name            = "n8n"
   stop_on_destroy = true
 
@@ -34,9 +52,35 @@ resource "proxmox_virtual_environment_vm" "n8n" {
 
   disk {
     datastore_id = "local"
-    import_from  = proxmox_virtual_environment_download_file.debian_cloud_image.id
+    import_from  = proxmox_download_file.debian_cloud_image.id
     interface    = "scsi0"
     size         = 10
+  }
+
+  # Cloud-init / SSH / networking
+  initialization {
+    datastore_id = "local"
+
+    user_account {
+      username = "root"
+      keys     = [file(var.ssh_public_key_path)]
+      password = "root"
+
+    }
+
+    ip_config {
+      ipv4 {
+        address = "dhcp"
+      }
+    }
+
+    ip_config {
+      ipv4 {
+        address = "10.10.10.201/24"
+      }
+    }
+
+    user_data_file_id = proxmox_virtual_environment_file.qemu_agent_install.id
   }
 
   # Network Interface for LAN

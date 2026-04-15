@@ -1,19 +1,21 @@
 ---
 - import_playbook: apps/actual_budget.yml
 - import_playbook: apps/adguard.yml
-- import_playbook: apps/blog.yml
+# still don't know how to mess with hugo, do this LATER
+# - import_playbook: apps/blog.yml
 - import_playbook: apps/byte_stash.yml
-- import_playbook: apps/caddy.yml
 - import_playbook: apps/cloudflared.yml
-- import_playbook: apps/filebrowser.yml
+# - import_playbook: apps/filebrowser.yml
 - import_playbook: apps/focalboard.yml
 - import_playbook: apps/glance.yml
 - import_playbook: apps/immich.yml
+- import_playbook: apps/jellyfin.yml
+- import_playbook: apps/n8n.yml
 - import_playbook: apps/nextcloud.yml
-- import_playbook: apps/open_media_vault.yml
 - import_playbook: apps/overleaf.yml
 - import_playbook: apps/paperless-ngx.yml
 - import_playbook: apps/portainer.yml
-- import_playbook: apps/qbittorrent.yml
+- import_playbook: apps/romm.yml
 - import_playbook: apps/syncthing.yml
 - import_playbook: apps/vaultwarden.yml
+- import_playbook: apps/wireguard.yml

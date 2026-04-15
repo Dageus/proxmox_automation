@@ -1,6 +1,6 @@
 ---
-- name: Download and deploy Caddy
-  hosts: caddy
+- name: Download and deploy Jellyfin
+  hosts: jellyfin
   become: yes
 
   tasks:
@@ -9,7 +9,7 @@
         upgrade: dist
         update_cache: yes
       tags:
-        - [update]
+        - update
 
     - name: Deploy Portainer Agent
       include_role:
@@ -17,8 +17,8 @@
       vars:
         service_name: portainer_agent
 
-    - name: Deploy caddy
+    - name: Deploy Jellyfin
       include_role:
         name: docker_service_deploy
       vars:
-        service_name: caddy
+        service_name: jellyfin

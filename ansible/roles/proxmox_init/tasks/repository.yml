@@ -1,25 +1,27 @@
 ---
-- name: Disable the pve-enterprise repository
-  apt_repository:
-    repo: "deb https://enterprise.proxmox.com/debian/pve {{ ansible_facts['distribution_release'] }} pve-enterprise"
+- name: Disable the Proxmox Enterprise repositories
+  ansible.builtin.file:
+    path: "{{ item }}"
     state: absent
-
-- name: Disable the ceph-enterprise repository (if exists)
-  apt_repository:
-    repo: "deb https://enterprise.proxmox.com/debian/ceph-quincy {{ ansible_facts['distribution_release'] }} enterprise"
-    state: absent
+  loop:
+    # Proxmox 9.x
+    - /etc/apt/sources.list.d/pve-enterprise.sources
+    - /etc/apt/sources.list.d/ceph.sources
+    # Proxmox <= 8
+    - /etc/apt/sources.list.d/pve-enterprise.lists
+    - /etc/apt/sources.list.d/ceph.lists
 
 - name: Add Proxmox No-Subscription repository
   apt_repository:
     repo: "deb http://download.proxmox.com/debian/pve {{ ansible_facts['distribution_release'] }} pve-no-subscription"
     state: present
-    update_cache: yes
+    update_cache: no
 
 - name: Add Debian Bookworm Repositories with non-free-firmware
   apt_repository:
     repo: "{{ item }}"
     state: present
-    update_cache: yes
+    update_cache: no
   loop:
     - "deb http://ftp.debian.org/debian {{ ansible_facts['distribution_release'] }} main contrib non-free-firmware"
     - "deb http://ftp.debian.org/debian {{ ansible_facts['distribution_release'] }}-updates main contrib non-free-firmware"

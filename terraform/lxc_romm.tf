@@ -5,17 +5,14 @@ module "romm" {
 
   container = {
     name      = "romm"
+    ip_suffix = "223"
     memory    = 1024
     disk_size = 6
-    tags      = ["terraform", "ansible", "docker", "media", "external_disk"]
+    tags      = ["terraform", "ansible", "docker", "games", "external_disk"]
     mount_points = [
       {
-        volume = "drive1"
-        path   = "mounted_drive1"
-      },
-      {
-        volume = "drive2"
-        path   = "mounted_drive2"
+        volume = "/mnt/sdd/romm"
+        path   = "/mnt/romm_data"
       }
     ]
   }

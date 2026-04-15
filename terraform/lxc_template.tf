@@ -8,7 +8,7 @@ resource "proxmox_virtual_environment_container" "docker_template" {
   unprivileged = true
 
   operating_system {
-    template_file_id = proxmox_virtual_environment_download_file.debian-12-standard.id
+    template_file_id = proxmox_download_file.debian-12-standard.id
     type             = "debian"
   }
 

@@ -50,7 +50,7 @@
         resizefs: yes
 
     - name: Enable all content types on local storage
-      command: pvesm set local --content backup,iso,vztmpl,rootdir,images,snippets
+      command: pvesm set local --content backup,iso,vztmpl,rootdir,images,snippets,import
 
     - name: Verify storage layout
       command: lvs

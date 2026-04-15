@@ -1,4 +1,4 @@
-resource "proxmox_virtual_environment_download_file" "debian-12-standard" {
+resource "proxmox_download_file" "debian-12-standard" {
   content_type = "vztmpl"
   datastore_id = "local"
   node_name    = var.proxmox_node

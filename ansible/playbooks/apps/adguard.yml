@@ -9,7 +9,7 @@
         upgrade: dist
         update_cache: yes
       tags:
-        - [update]
+        - update
 
     - name: Deploy Portainer Agent
       include_role:
@@ -29,7 +29,7 @@
           delegate_to: pve
 
         - name: Restart LXC to apply TUN device passthrough
-          ansible.builtin.command: "pct restart {{ proxmox_vmid }}"
+          ansible.builtin.command: "pct reboot {{ proxmox_vmid }}"
           delegate_to: pve
 
     - name: Wait for LXC to finish rebooting

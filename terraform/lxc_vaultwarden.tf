@@ -5,6 +5,7 @@ module "vaultwarden" {
 
   container = {
     name      = "vaultwarden"
+    ip_suffix = "225"
     memory    = 1024
     disk_size = 6
     tags      = ["terraform", "ansible", "docker"]
