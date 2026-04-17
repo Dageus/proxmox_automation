@@ -1,9 +1,18 @@
 #SPDX-License-Identifier: MIT-0
 ---
-- name: Generate dynamic Caddyfile from Proxmox inventory
-  ansible.builtin.template:
-    src: templates/Caddyfile.j2
-    dest: /etc/caddy/Caddyfile
-    mode: '0644'
-  notify: Reload Caddy
+- name: Copy base Caddyfile
+  template:
+    src: Caddyfile.j2
+    dest: /opt/caddy/Caddyfile
 
+- name: Generate modular Caddy configs for all apps
+  template:
+    src: app.conf.j2
+    dest: "/opt/caddy/conf.d/{{ item }}.conf"
+  loop: "{{ groups['all'] }}"
+  when: hostvars[item]['services'] is defined
+
+- name: Gracefully reload Caddy to apply new routes
+  command: docker exec caddy caddy reload --config /etc/caddy/Caddyfile
+  # Only run this if the template task above actually changed a file
+  changed_when: false

@@ -5,7 +5,7 @@ module "glance" {
 
   container = {
     name      = "glance"
-    ip_suffix = "217"
+    ip_suffix = "209"
     memory    = 512
     disk_size = 6
     tags      = ["terraform", "ansible", "docker"]

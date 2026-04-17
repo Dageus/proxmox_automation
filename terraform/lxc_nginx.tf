@@ -7,7 +7,7 @@ module "nginx" {
 
   container = {
     name      = "nginx"
-    ip_suffix = "221"
+    ip_suffix = "213"
     memory    = 512
     disk_size = 6
     tags      = ["terraform", "ansible", "docker", "proxy"]

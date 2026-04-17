@@ -23,6 +23,16 @@
     dest: /opt/{{ service_name }}/
     mode: '0600'
 
+- name: Ensure custom app directories exist with correct permissions
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    recurse: yes
+  loop: "{{ app_dir_perms | default([]) }}"
+  when: app_dir_perms is defined
+
 - name: Deploy the containers via docker compose
   community.docker.docker_compose_v2:
     project_src: "/opt/{{ service_name }}"

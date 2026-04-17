@@ -1,0 +1,5 @@
+ansible_user: debian
+
+services:
+  - port: 5678
+    subdomain: n8n

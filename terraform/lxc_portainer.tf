@@ -7,7 +7,7 @@ module "portainer" {
 
   container = {
     name      = "portainer"
-    ip_suffix = "229"
+    ip_suffix = "216"
     memory    = 1024
     disk_size = 6
     tags      = ["terraform", "ansible", "docker", "mgmt"]

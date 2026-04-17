@@ -9,7 +9,7 @@ module "filebrowser" {
   container = {
     name      = "filebrowser"
     memory    = 1024
-    ip_suffix = "228"
+    ip_suffix = "207"
     disk_size = 6
     tags      = ["terraform", "ansible", "docker", "media", "external_disk"]
   }

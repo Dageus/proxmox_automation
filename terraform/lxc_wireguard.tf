@@ -5,7 +5,7 @@ module "wireguard" {
 
   container = {
     name      = "wireguard"
-    ip_suffix = "226"
+    ip_suffix = "220"
     memory    = 512
     disk_size = 6
     tags      = ["terraform", "ansible", "docker", "vpn"]

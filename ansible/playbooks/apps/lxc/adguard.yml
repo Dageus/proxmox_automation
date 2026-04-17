@@ -31,6 +31,8 @@
         - name: Restart LXC to apply TUN device passthrough
           ansible.builtin.command: "pct reboot {{ proxmox_vmid }}"
           delegate_to: pve
+          async: 60
+          poll: 0
 
     - name: Wait for LXC to finish rebooting
       ansible.builtin.wait_for_connection:

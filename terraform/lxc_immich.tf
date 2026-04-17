@@ -7,9 +7,9 @@ module "immich" {
 
   container = {
     name      = "immich",
-    ip_suffix = "218"
+    ip_suffix = "210"
     memory    = 2048
-    disk_size = 6
+    disk_size = 15
     tags      = ["terraform", "ansible", "docker", "media", "external_disk"]
     mount_points = [
       {

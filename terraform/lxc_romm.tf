@@ -5,7 +5,7 @@ module "romm" {
 
   container = {
     name      = "romm"
-    ip_suffix = "223"
+    ip_suffix = "217"
     memory    = 1024
     disk_size = 6
     tags      = ["terraform", "ansible", "docker", "games", "external_disk"]

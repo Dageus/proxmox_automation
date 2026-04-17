@@ -7,7 +7,7 @@ module "arr_stack" {
 
   container = {
     name      = "arr-stack",
-    ip_suffix = "227"
+    ip_suffix = "202"
     memory    = 2048
     disk_size = 8
     tags      = ["terraform", "ansible", "docker", "media", "external_disk"]

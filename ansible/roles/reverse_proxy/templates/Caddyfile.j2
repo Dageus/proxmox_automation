@@ -3,24 +3,4 @@
     email {{ email | default('admin@yourdomain.com') }}
 }
 
-{% for host in groups['all'] %}
-# Skip the Caddy host itself to prevent infinite routing loops
-{% if host != inventory_hostname and hostvars[host]['ansible_host'] is defined %}
-
-{% set app_ip = hostvars[host]['ansible_host'] %}
-{% set app_port = hostvars[host]['app_port'] | default(80) %}
-{% set subdomain = hostvars[host]['subdomain'] | default(host) %}
-
-{{ subdomain }}.{{ domain }} {
-    tls {
-        dns cloudflare {env.CF_API_TOKEN}
-        # Optional: Force local Tailscale IPs for DNS resolution
-        # resolvers 1.1.1.1
-    }
-
-    # Proxy traffic to the LXC's internal IP and port
-    reverse_proxy {{ app_ip }}:{{ app_port }}
-}
-
-{% endif %}
-{% endfor %}
+import /etc/caddy/conf.d/*.conf

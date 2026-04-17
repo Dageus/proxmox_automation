@@ -1,0 +1,9 @@
+services:
+  - subdomain: qbit
+    port: 8080
+  - subdomain: prowlarr
+    port: 9696
+  - subdomain: sonarr
+    port: 8989
+  - subdomain: radarr
+    port: 7878

@@ -1,0 +1,11 @@
+services:
+  - port: 2283
+    subdomain: photos
+
+app_dir_perms:
+  - path: /opt/immich
+    owner: "1000"
+    group: "1000"
+  - path: /immich_data
+    owner: "1000"
+    group: "1000"

@@ -5,9 +5,9 @@ module "paperless_ngx" {
 
   container = {
     name      = "paperless-ngx"
-    ip_suffix = "222"
+    ip_suffix = "215"
     memory    = 2048
-    disk_size = 20
+    disk_size = 6
     tags      = ["terraform", "ansible", "docker", "media"]
     mount_points = [
       {

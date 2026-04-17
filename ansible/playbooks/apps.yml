@@ -1,21 +1,26 @@
 ---
-- import_playbook: apps/actual_budget.yml
-- import_playbook: apps/adguard.yml
+# lxcs
+- import_playbook: apps/lxc/actual_budget.yml
+- import_playbook: apps/lxc/adguard.yml
 # still don't know how to mess with hugo, do this LATER
 # - import_playbook: apps/blog.yml
-- import_playbook: apps/byte_stash.yml
-- import_playbook: apps/cloudflared.yml
+- import_playbook: apps/lxc/byte_stash.yml
+- import_playbook: apps/lxc/cloudflared.yml
 # - import_playbook: apps/filebrowser.yml
-- import_playbook: apps/focalboard.yml
-- import_playbook: apps/glance.yml
-- import_playbook: apps/immich.yml
-- import_playbook: apps/jellyfin.yml
-- import_playbook: apps/n8n.yml
-- import_playbook: apps/nextcloud.yml
-- import_playbook: apps/overleaf.yml
-- import_playbook: apps/paperless-ngx.yml
-- import_playbook: apps/portainer.yml
-- import_playbook: apps/romm.yml
-- import_playbook: apps/syncthing.yml
-- import_playbook: apps/vaultwarden.yml
-- import_playbook: apps/wireguard.yml
+- import_playbook: apps/lxc/focalboard.yml
+- import_playbook: apps/lxc/immich.yml
+- import_playbook: apps/lxc/jellyfin.yml
+- import_playbook: apps/lxc/nextcloud.yml
+- import_playbook: apps/lxc/overleaf.yml
+- import_playbook: apps/lxc/paperless-ngx.yml
+- import_playbook: apps/lxc/portainer.yml
+- import_playbook: apps/lxc/romm.yml
+- import_playbook: apps/lxc/syncthing.yml
+- import_playbook: apps/lxc/vaultwarden.yml
+- import_playbook: apps/lxc/wireguard.yml
+# vms
+- import_playbook: apps/vm/n8n.yml
+# - import_playbook: apps/vm/open_media_vault.yml
+
+# glance comes last so it can fetch every host
+- import_playbook: apps/lxc/glance.yml

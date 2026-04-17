@@ -5,7 +5,7 @@ module "syncthing" {
 
   container = {
     name      = "syncthing"
-    ip_suffix = "224"
+    ip_suffix = "218"
     memory    = 512
     disk_size = 6
     tags      = ["terraform", "ansible", "docker", "media", "external_disk"]

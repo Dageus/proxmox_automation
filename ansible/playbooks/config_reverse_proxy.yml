@@ -1,16 +1,9 @@
 ---
 - name: Configure Reverse Proxy
-  hosts: reverse_proxy
+  hosts: caddy
   become: yes
 
   tasks:
-    - name: Configure Caddyfiles
-      include_role:
-        name: reverse_proxy
-      vars:
-        domain: "jmnogueira.pt"
-        email: "jomouzio@gmail.com"
-
     - name: Ensure system is up to date
       ansible.builtin.apt:
         upgrade: dist
@@ -29,3 +22,10 @@
         name: docker_service_deploy
       vars:
         service_name: caddy
+
+    - name: Configure Caddyfiles
+      include_role:
+        name: reverse_proxy
+      vars:
+        domain: "jmnogueira.pt"
+        email: "jomouzio@gmail.com"

@@ -1,8 +1,4 @@
 #SPDX-License-Identifier: MIT-0
 ---
 - name: Reload Caddy
-  ansible.builtin.command: caddy reload --config /etc/caddy/Caddyfile
-  # Alternatively, if running Caddy as a systemd service:
-  # ansible.builtin.systemd:
-  #   name: caddy
-  #   state: reloaded
+  command: docker exec caddy caddy reload --config /etc/caddy/Caddyfile

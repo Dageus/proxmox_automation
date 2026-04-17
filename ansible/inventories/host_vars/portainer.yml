@@ -1,0 +1,3 @@
+services:
+  - port: 9943
+    subdomain: portainer

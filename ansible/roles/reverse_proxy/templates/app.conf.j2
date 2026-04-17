@@ -1,0 +1,11 @@
+{% set app_ip = hostvars[item]['ansible_host'] %}
+
+{% for svc in hostvars[item]['services'] %}
+{{ svc.subdomain }}.{{ domain }} {
+    tls {
+        dns cloudflare {env.CF_API_TOKEN}
+    }
+    reverse_proxy {{ app_ip }}:{{ svc.port }}
+}
+
+{% endfor %}

@@ -7,7 +7,7 @@ module "jellyfin" {
 
   container = {
     name      = "jellyfin",
-    ip_suffix = "219"
+    ip_suffix = "211"
     memory    = 2048
     disk_size = 6
     tags      = ["terraform", "ansible", "docker", "media", "external_disk"]

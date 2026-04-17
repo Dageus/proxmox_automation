@@ -5,7 +5,7 @@ module "nextcloud" {
 
   container = {
     name      = "nextcloud",
-    ip_suffix = "220"
+    ip_suffix = "212"
     memory    = 2048
     disk_size = 6
     tags      = ["terraform", "ansible", "docker", "media", "external_disk"]

@@ -1,6 +1,6 @@
 ---
-- name: Download and deploy RomM
-  hosts: portainer
+- name: Download and deploy Glance
+  hosts: glance
   become: yes
 
   tasks:
@@ -17,8 +17,12 @@
       vars:
         service_name: portainer_agent
 
-    - name: Deploy RomM
+    - name: Deploy Glance
       include_role:
         name: docker_service_deploy
       vars:
-        service_name: romm
+        service_name: glance
+
+    - name: Copy configuration file
+      include_role:
+        name: glance

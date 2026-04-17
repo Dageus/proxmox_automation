@@ -1,0 +1,3 @@
+services:
+  - port: 8000
+    subdomain: paperless

@@ -1,0 +1,3 @@
+services:
+  - port: 8834
+    subdomain: sync
