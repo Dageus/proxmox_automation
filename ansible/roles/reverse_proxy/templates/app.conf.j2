@@ -3,7 +3,7 @@
 {% for svc in hostvars[item]['services'] %}
 {{ svc.subdomain }}.{{ domain }} {
     tls {
-        dns cloudflare {env.CF_API_TOKEN}
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
     }
     reverse_proxy {{ app_ip }}:{{ svc.port }}
 }

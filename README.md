@@ -5,6 +5,8 @@
 ![Ansible](https://img.shields.io/badge/ansible-%231A1918.svg?style=for-the-badge&logo=ansible&logoColor=white)
 ![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white)
 
+This is a complementary repo to my [homelab setup](https://github.com/Dageus/homelab) for automating my deployments and configurations.
+
 ## Running the docker runner
 
 ```

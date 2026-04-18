@@ -5,6 +5,12 @@
     src: Caddyfile.j2
     dest: /opt/caddy/Caddyfile
 
+- name: Ensure Caddy conf.d directory exists
+  ansible.builtin.file:
+    path: /opt/caddy/conf.d
+    state: directory
+    mode: '0755'
+
 - name: Generate modular Caddy configs for all apps
   template:
     src: app.conf.j2

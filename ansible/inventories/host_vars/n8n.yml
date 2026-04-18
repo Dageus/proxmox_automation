@@ -1,3 +1,6 @@
+# WARNING: I'm against this but I see no other way as of now.
+ansible_host: 192.168.1.221
+
 ansible_user: debian
 
 services:
