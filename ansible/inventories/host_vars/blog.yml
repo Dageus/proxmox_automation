@@ -1,3 +1,4 @@
 services:
   - port: 80
     subdomain: blog
+    icon: sh:hugo

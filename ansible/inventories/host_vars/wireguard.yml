@@ -1,3 +1,4 @@
 services:
   - port: 51820
     subdomain: wg
+    icon: sh:wireguard

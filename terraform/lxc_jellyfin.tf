@@ -9,12 +9,12 @@ module "jellyfin" {
     name      = "jellyfin",
     ip_suffix = "211"
     memory    = 2048
-    disk_size = 6
+    disk_size = 30
     tags      = ["terraform", "ansible", "docker", "media", "external_disk"]
     mount_points = [
       {
         volume = "/mnt/ssd/arr/media"
-        path   = "/arr/media"
+        path   = "/media"
       }
     ]
   }

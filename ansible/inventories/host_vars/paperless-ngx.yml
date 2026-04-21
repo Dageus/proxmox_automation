@@ -1,3 +1,4 @@
 services:
   - port: 8000
     subdomain: paperless
+    icon: sh:paperless-ngx

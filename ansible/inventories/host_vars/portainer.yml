@@ -1,3 +1,4 @@
 services:
   - port: 9943
     subdomain: portainer
+    icon: sh:portainer

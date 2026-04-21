@@ -1,6 +1,6 @@
 ---
-- name: Download and deploy File Browser
-  hosts: arr_stack
+- name: Download and deploy *arr stack
+  hosts: arr-stack
   become: yes
 
   tasks:
@@ -10,6 +10,30 @@
         update_cache: yes
       tags:
         - update
+
+    - name: Configure Proxmox LXC for TUN device passthrough
+      block:
+        - name: Check if TUN is already configured
+          ansible.builtin.command: "pct config {{ proxmox_vmid }}"
+          register: lxc_config
+          delegate_to: pve
+          changed_when: false
+
+        - name: Apply native TUN passthrough via pct
+          ansible.builtin.command: "pct set {{ proxmox_vmid }} -dev0 /dev/net/tun"
+          delegate_to: pve
+          when: "'/dev/net/tun' not in lxc_config.stdout"
+
+        - name: Restart LXC to apply changes
+          ansible.builtin.command: "pct reboot {{ proxmox_vmid }}"
+          delegate_to: pve
+          async: 60
+          poll: 0
+          when: "'/dev/net/tun' not in lxc_config.stdout"
+
+    - name: Enable IP Forwarding inside LXC
+      include_role:
+        name: enable_routing
 
     - name: Deploy Portainer Agent
       include_role:

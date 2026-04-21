@@ -21,7 +21,7 @@ Use:
 ssh-copy-id -i /path/to/ssh-key root@<host_ip>
 ```
 
-To add you SSH key to the known_hosts of the pve host.
+To add your SSH key to the known_hosts of the pve host.
 
 ## Ansible
 
@@ -107,7 +107,8 @@ The workflow was the following:
 
     - it then start it up again, connects to the actual LXC, and deploys the Docker app.
 
-> NOTE: this requires you to add a `ignore_changes` block to the LXC, stating that any changes made to mount_point are not to be tracked. Since Terraform did not provision the mount_point, if it sees it there, things will get confusing
+> [!WARNING:]
+> this requires you to add a `ignore_changes` block to the LXC, stating that any changes made to mount_point are not to be tracked. Since Terraform did not provision the mount_point, if it sees it there, things will get confusing
 
 ### Terraform-first approach
 

@@ -1,6 +1,6 @@
 ---
 - name: Download and deploy Vaultwarden
-  hosts: syncthing
+  hosts: vaultwarden
   become: yes
 
   tasks:

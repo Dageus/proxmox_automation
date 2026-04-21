@@ -1,6 +1,7 @@
 services:
   - port: 8080
     subdomain: cloud
+    icon: sh:nextcloud
 
 app_dir_perms:
   - path: /nextcloud_data

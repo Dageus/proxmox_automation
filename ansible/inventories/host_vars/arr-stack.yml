@@ -1,9 +1,25 @@
 services:
   - subdomain: qbit
     port: 8080
+    icon: sh:qbittorrent
   - subdomain: prowlarr
     port: 9696
+    icon: sh:prowlarr
   - subdomain: sonarr
     port: 8989
+    icon: sh:sonarr
   - subdomain: radarr
     port: 7878
+    icon: sh:radarr
+  - subdomain: lidarr
+    port: 8686
+    icon: sh:lidarr
+  - subdomain: bazarr
+    port: 6767
+    icon: sh:bazarr
+  - subdomain: seerr
+    port: 5055
+    icon: sh:seerr
+  - subdomain: autobrr
+    port: 7474
+    icon: sh:autobrr

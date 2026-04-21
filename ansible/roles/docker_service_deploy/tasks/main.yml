@@ -37,6 +37,8 @@
   community.docker.docker_compose_v2:
     project_src: "/opt/{{ service_name }}"
     state: present
+    remove_orphans: yes
+    pull: always
   register: output
 
 - name: Show Docker Compose output

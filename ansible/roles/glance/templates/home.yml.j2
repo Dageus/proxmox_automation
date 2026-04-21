@@ -1,0 +1,80 @@
+- name: Home
+  columns:
+    # ==========================================
+    # COLUMN 1: Homelab Navigation & Utilities
+    # ==========================================
+    - size: small
+      widgets:
+        - type: calendar
+          first-day-of-week: monday
+
+        - type: weather
+          location: Lisbon, Portugal
+          units: metric
+          hour-format: 24h
+          show-area-name: true
+
+    - size: full
+      widgets:
+        - type: group
+          widgets:
+            - type: bookmarks
+              groups:
+                - title: Homelab Services
+                  hide-arrow: true
+                  same-tab: true
+                  links:
+                    {%- for host in groups['all'] %}
+                    {%- if hostvars[host]['services'] is defined %}
+                    {%- for svc in hostvars[host]['services'] %}
+
+                    - title: {{ svc.subdomain | capitalize }}
+                      url: "https://{{ svc.subdomain }}.jmnogueira.pt"
+                      icon: "{{ svc.icon | default('si:server') }}"
+                    {%- endfor %}
+                    {%- endif %}
+                    {%- endfor %}
+                    # ------------------------------
+
+    # ==========================================
+    # COLUMN 2: Tech News & Media (Wide)
+    # ==========================================
+    - size: full
+      widgets:
+        - type: search
+          search-engine: google
+          bangs:
+            - title: YouTube
+              shortcut: "!yt"
+              url: https://www.youtube.com/results?search_query={QUERY}
+
+        - type: group
+          widgets:
+            - type: hacker-news
+              limit: 10
+            - type: lobsters
+              limit: 10
+
+        - type: videos
+          channels:
+            - UCXuqSBlHAE6Xw-yeJA0Tunw # Linus Tech Tips
+            - UCR-DXc1voovS8nhAvccRZhg # Jeff Geerling
+            - UCsBjURrPoezykLs9EqgamOA # Fireship
+            - UCBJycsmduvYEL83R_U4JriQ # Marques Brownlee
+
+        - type: group
+          widgets:
+            - type: reddit
+              subreddit: technology
+              show-thumbnails: true
+            - type: reddit
+              subreddit: selfhosted
+              show-thumbnails: true
+
+        - type: releases
+          cache: 12h
+          repositories:
+            - glanceapp/glance
+            - ansible/ansible
+            - immich-app/immich
+            - syncthing/syncthing

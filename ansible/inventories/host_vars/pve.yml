@@ -1,0 +1,3 @@
+services:
+  - subdomain: pve
+    port: 8006

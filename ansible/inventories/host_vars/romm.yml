@@ -1,3 +1,4 @@
 services:
   - port: 80
     subdomain: romm
+    icon: sh:romm

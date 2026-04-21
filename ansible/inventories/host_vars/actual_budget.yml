@@ -1,3 +1,4 @@
 services:
   - port: 5006
     subdomain: actual
+    icon: sh:actualbudget

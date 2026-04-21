@@ -1,3 +1,4 @@
 services:
   - port: 80
     subdomain: adguard
+    icon: sh:adguardhome

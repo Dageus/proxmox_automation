@@ -1,3 +1,4 @@
 services:
   - port: 80
     subdomain: overleaf
+    icon: sh:overleaf

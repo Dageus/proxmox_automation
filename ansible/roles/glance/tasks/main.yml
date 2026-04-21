@@ -1,6 +1,5 @@
-#SPDX-License-Identifier: MIT-0
 ---
-- name: Copy Glance configuration to host
+- name: Copy home configuration to host
   template:
-    src: glance.yml.j2
-    dest: /opt/glance/
+    src: home.yml.j2
+    dest: /opt/glance/config/home.yml

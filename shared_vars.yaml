@@ -31,3 +31,6 @@ storage_folders:
   - "/mnt/ssd/arr/torrents/movies"
   - "/mnt/ssd/arr/torrents/music"
   - "/mnt/ssd/arr/torrents/tv"
+  # extra torrents
+  - "/mnt/ssd/arr/torrents/farming"
+  - "/mnt/ssd/arr/torrents/games"
