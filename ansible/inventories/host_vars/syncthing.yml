@@ -2,3 +2,4 @@ services:
   - port: 8834
     subdomain: sync
     icon: sh:syncthing
+    title: Syncthing

@@ -2,11 +2,9 @@ services:
   - port: 8080
     subdomain: cloud
     icon: sh:nextcloud
+    title: Nextcloud
 
 app_dir_perms:
   - path: /nextcloud_data
-    owner: "33"
-    group: "33"
-  - path: /opt/nextcloud/db
-    owner: "999"
-    group: "999"
+    owner: "82"
+    group: "82"

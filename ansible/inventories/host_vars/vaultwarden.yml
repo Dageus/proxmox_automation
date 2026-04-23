@@ -2,3 +2,4 @@ services:
   - port: 8000
     subdomain: vault
     icon: sh:vaultwarden
+    title: Vaultwarden

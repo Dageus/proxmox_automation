@@ -2,6 +2,7 @@ services:
   - subdomain: qbit
     port: 8080
     icon: sh:qbittorrent
+    title: qBittorrent
   - subdomain: prowlarr
     port: 9696
     icon: sh:prowlarr

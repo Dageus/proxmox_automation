@@ -7,3 +7,4 @@ services:
   - port: 5678
     subdomain: n8n
     icon: sh:n8n
+    title: n8n

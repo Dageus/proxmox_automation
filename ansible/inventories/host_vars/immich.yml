@@ -2,6 +2,7 @@ services:
   - port: 2283
     subdomain: photos
     icon: sh:immich
+    title: Immich
 
 app_dir_perms:
   - path: /opt/immich
