@@ -1,3 +1,4 @@
 ---
 service_name: "immich"
 app_config_path: "/home/jomouzio/Desktop/projects/homelab/services"
+start_container: true

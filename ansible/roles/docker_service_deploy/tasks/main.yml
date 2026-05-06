@@ -40,7 +40,9 @@
     remove_orphans: yes
     pull: always
   register: output
+  when: start_container
 
 - name: Show Docker Compose output
-  ansible.builtin.debug:
+  debug:
     var: output
+  when: start_container
