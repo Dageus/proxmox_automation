@@ -2,10 +2,41 @@
 
 {% for svc in hostvars[item]['services'] %}
 {{ svc.subdomain }}.{{ domain }} {
-    tls {
-        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+
+    import secure_headers
+
+    {%- set log_spam = svc.disable_logs | default(false) %}
+    {%- if log_spam %}
+
+    log {
+        output discard
     }
-    reverse_proxy {{ app_ip }}:{{ svc.port }}
+    {%- else %}
+
+    log {
+        output file /var/log/caddy/access.log
+    }
+    {%- endif %}
+
+    route {
+        {%- set auth = svc.auth_type | default('proxy') %}
+
+        {%- if auth == 'proxy' %}
+
+        import authentik
+        {%- endif %}
+
+
+        {% if svc.subdomain == 'status' %}
+        reverse_proxy {{ app_ip }}:{{ svc.port }} {
+            header_up X-Real-IP {remote_host}
+        }
+        {% else %}
+        reverse_proxy {{ app_ip }}:{{ svc.port }}
+        {% endif %}
+
+    }
+
 }
 
 {% endfor %}

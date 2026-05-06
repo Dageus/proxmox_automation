@@ -20,5 +20,7 @@
 
 - name: Gracefully reload Caddy to apply new routes
   command: docker exec caddy caddy reload --config /etc/caddy/Caddyfile
-  # Only run this if the template task above actually changed a file
-  changed_when: false
+  register: caddy_reload
+  until: caddy_reload.rc == 0
+  retries: 5
+  delay: 3

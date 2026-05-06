@@ -1,6 +1,37 @@
 {
-    # Automatically accept Let's Encrypt terms and notify this email
     email {{ email | default('admin@yourdomain.com') }}
+
+    acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+
+    crowdsec {
+        api_url http://crowdsec:8080/
+        api_key {env.CROWDSEC_API_KEY}
+    }
+
+    order crowdsec first
+}
+
+(secure_headers) {
+    header {
+        -server
+        Strict-Transport-Security "max-age=31536000;"
+        ?X-Content-Type-Options nosniff
+        ?X-Frame-Options DENY
+    }
+    encode zstd gzip
+    crowdsec
+}
+
+(authentik) {
+    reverse_proxy /outpost.goauthentik.io/* http://{{ hostvars['authentik']['ansible_host'] }}:{{ hostvars['authentik']['port'] }}
+
+    forward_auth http://{{ hostvars['authentik']['ansible_host'] }}:{{ hostvars['authentik']['port'] }} {
+        uri /outpost.goauthentik.io/auth/caddy
+
+        copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Entitlements X-Authentik-Email X-Authentik-Name X-Authentik-Uid X-Authentik-Jwt X-Authentik-Meta-Jwks X-Authentik-Meta-Outpost X-Authentik-Meta-Provider X-Authentik-Meta-App X-Authentik-Meta-Version
+
+        trusted_proxies private_ranges
+    }
 }
 
 import /etc/caddy/conf.d/*.conf
