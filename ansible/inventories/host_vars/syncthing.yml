@@ -3,3 +3,4 @@ services:
     subdomain: sync
     icon: sh:syncthing
     title: Syncthing
+    auth_type: proxy

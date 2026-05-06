@@ -3,24 +3,39 @@ services:
     port: 8080
     icon: sh:qbittorrent
     title: qBittorrent
+    auth_type: proxy
+
   - subdomain: prowlarr
     port: 9696
     icon: sh:prowlarr
+    auth_type: proxy
+
   - subdomain: sonarr
     port: 8989
     icon: sh:sonarr
+    auth_type: proxy
+
   - subdomain: radarr
     port: 7878
     icon: sh:radarr
+    auth_type: proxy
+
   - subdomain: lidarr
     port: 8686
     icon: sh:lidarr
+    auth_type: proxy
+
   - subdomain: bazarr
     port: 6767
     icon: sh:bazarr
+    auth_type: proxy
+
   - subdomain: seerr
     port: 5055
     icon: sh:seerr
+    auth_type: proxy
+
   - subdomain: autobrr
     port: 7474
     icon: sh:autobrr
+    auth_type: oidc

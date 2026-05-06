@@ -1,0 +1,6 @@
+services:
+  - subdomain: status
+    port: 3001
+    icon: sh:uptime-kuma
+    auth_type: proxy
+    disable_logs: true

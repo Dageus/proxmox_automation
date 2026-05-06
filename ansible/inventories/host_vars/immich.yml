@@ -3,6 +3,7 @@ services:
     subdomain: photos
     icon: sh:immich
     title: Immich
+    auth_type: oidc
 
 app_dir_perms:
   - path: /opt/immich

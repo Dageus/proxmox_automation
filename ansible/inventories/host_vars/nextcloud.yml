@@ -3,6 +3,7 @@ services:
     subdomain: cloud
     icon: sh:nextcloud
     title: Nextcloud
+    auth_type: oidc
 
 app_dir_perms:
   - path: /nextcloud_data

@@ -3,3 +3,4 @@ services:
     subdomain: adguard
     icon: sh:adguard-home
     title: AdGuard Home
+    auth_type: proxy

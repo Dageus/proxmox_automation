@@ -3,3 +3,4 @@ services:
     subdomain: vault
     icon: sh:vaultwarden
     title: Vaultwarden
+    auth_type: none

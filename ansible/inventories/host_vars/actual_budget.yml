@@ -3,3 +3,4 @@ services:
     subdomain: actual
     icon: sh:actualbudget
     title: Actual Budget
+    auth_type: proxy

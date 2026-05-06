@@ -1,0 +1,6 @@
+services:
+  - port: 9000
+    subdomain: auth
+    icon: sh:authentik
+    title: Authentik
+    auth_type: oidc
