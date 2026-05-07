@@ -1,6 +1,6 @@
 services:
   - subdomain: status
-    port: 3001
-    icon: sh:uptime-kuma
+    port: 8080
+    icon: sh:gatus
     auth_type: proxy
     disable_logs: true

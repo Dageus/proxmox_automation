@@ -14,7 +14,7 @@ module "jellyfin" {
     mount_points = [
       {
         volume = "/mnt/ssd/arr/media"
-        path   = "/media"
+        path   = "/arr/media"
       }
     ]
   }

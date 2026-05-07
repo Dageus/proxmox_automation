@@ -13,6 +13,7 @@ storage_folders:
   - "/mnt/ssd/paperless"
   - "/mnt/ssd/romm"
   - "/mnt/ssd/syncthing"
+  - "/mnt/ssd/common"
   # *arr stack (following TRaSH guides)
   - "/mnt/ssd/arr"
 
