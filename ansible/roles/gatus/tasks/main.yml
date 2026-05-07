@@ -1,0 +1,13 @@
+---
+- name: Copy configuration to host
+  template:
+    src: config.yml.j2
+    dest: /opt/gatus/config/config.yml
+
+- name: Generate modular Gatus configs for all apps
+  template:
+    src: app.yml.j2
+    dest: "/opt/gatus/config/{{ item }}.yml"
+  loop: "{{ groups['all'] }}"
+  when: hostvars[item]['services'] is defined
+  notify: Reload Gatus

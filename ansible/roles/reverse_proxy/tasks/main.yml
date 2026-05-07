@@ -5,6 +5,11 @@
     src: Caddyfile.j2
     dest: /opt/caddy/Caddyfile
 
+- name: Clean existing modular configs to prevent duplicates
+  file:
+    path: /opt/caddy/conf.d/
+    state: absent
+
 - name: Ensure Caddy conf.d directory exists
   ansible.builtin.file:
     path: /opt/caddy/conf.d

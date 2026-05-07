@@ -23,9 +23,9 @@
 }
 
 (authentik) {
-    reverse_proxy /outpost.goauthentik.io/* http://{{ hostvars['authentik']['ansible_host'] }}:{{ hostvars['authentik']['port'] }}
+    reverse_proxy /outpost.goauthentik.io/* http://{{ hostvars['authentik']['ansible_host'] }}:{{ hostvars['authentik']['services'][0]['port'] }}
 
-    forward_auth http://{{ hostvars['authentik']['ansible_host'] }}:{{ hostvars['authentik']['port'] }} {
+    forward_auth http://{{ hostvars['authentik']['ansible_host'] }}:{{ hostvars['authentik']['services'][0]['port'] }} {
         uri /outpost.goauthentik.io/auth/caddy
 
         copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Entitlements X-Authentik-Email X-Authentik-Name X-Authentik-Uid X-Authentik-Jwt X-Authentik-Meta-Jwks X-Authentik-Meta-Outpost X-Authentik-Meta-Provider X-Authentik-Meta-App X-Authentik-Meta-Version

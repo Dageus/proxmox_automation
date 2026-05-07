@@ -24,3 +24,7 @@
         service_name: gatus
 
     - name: Register services in Gatus
+      include_role:
+        name: gatus
+      vars:
+        domain: "jmnogueira.pt"

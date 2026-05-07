@@ -1,0 +1,12 @@
+{% set app_ip = hostvars[item]['ansible_host'] %}
+
+endpoints:
+{% for svc in hostvars[item]['services'] %}
+  - name: {{ svc.title | default(svc.subdomain | capitalize) }}
+    url: https://{{ svc.subdomain }}.{{ domain }}
+    interval: 30s
+    conditions:
+      - "[STATUS] == 200"
+      - "[RESPONSE_TIME] < 500"
+
+{% endfor %}
