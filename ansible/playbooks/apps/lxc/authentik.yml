@@ -1,0 +1,31 @@
+---
+- name: Download and deploy Authentik
+  hosts: authentik
+  become: yes
+
+  tasks:
+    - name: Ensure system is up to date
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: yes
+      tags:
+        - update
+
+    - name: Deploy Portainer Agent
+      include_role:
+        name: docker_service_deploy
+      vars:
+        service_name: portainer_agent
+
+    - name: Deploy authentik
+      include_role:
+        name: docker_service_deploy
+      vars:
+        service_name: authentik
+
+    - name: Inject Vault secret into existing .env
+      lineinfile:
+        path: /opt/authentik/.env
+        regexp: '^AUTHENTIK_BOOTSTRAP_TOKEN='
+        line: 'AUTHENTIK_BOOTSTRAP_TOKEN={{ vault_authentik_api_token }}'
+        create: yes

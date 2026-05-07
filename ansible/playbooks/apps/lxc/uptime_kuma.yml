@@ -1,0 +1,37 @@
+---
+- name: Download and deploy Uptime Kuma
+  hosts: uptime-kuma
+  become: yes
+
+  tasks:
+    - name: Ensure system is up to date
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: yes
+      tags:
+        - update
+
+    - name: Deploy Portainer Agent
+      include_role:
+        name: docker_service_deploy
+      vars:
+        service_name: portainer_agent
+
+    - name: Deploy syncthing
+      include_role:
+        name: docker_service_deploy
+      vars:
+        service_name: uptime_kuma
+
+    - name: Register services in Uptime Kuma
+      louis_m_24.uptime_kuma.monitor:
+        api_url: "http://{{ hostvars['uptime-kuma']['ansible_host'] }}:3001"
+        api_token: "{{ kuma_token }}"
+        name: "{{ item.1.title }} ({{ item.0 }})"
+        type: http
+        url: "https://{{ item.1.subdomain }}.{{ base_domain }}"
+        tags:
+          - "{{ item.0 }}"
+        state: present
+      delegate_to: localhost
+      loop: "{{ query('subelements', groups['all'], 'services', {'skip_missing': True}) }}"
