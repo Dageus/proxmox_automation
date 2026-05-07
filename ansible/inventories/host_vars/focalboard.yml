@@ -1,5 +1,0 @@
-services:
-  - port: 80
-    subdomain: focal
-    icon: sh:focalboard
-    title: Focalboard

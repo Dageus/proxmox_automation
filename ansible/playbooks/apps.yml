@@ -6,8 +6,6 @@
 # - import_playbook: apps/blog.yml
 - import_playbook: apps/lxc/byte_stash.yml
 - import_playbook: apps/lxc/cloudflared.yml
-# - import_playbook: apps/filebrowser.yml
-- import_playbook: apps/lxc/focalboard.yml
 - import_playbook: apps/lxc/immich.yml
 - import_playbook: apps/lxc/jellyfin.yml
 - import_playbook: apps/lxc/nextcloud.yml
