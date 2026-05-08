@@ -14,6 +14,10 @@ module "nextcloud" {
         volume = "/mnt/ssd/nextcloud"
         path   = "/nextcloud_data"
       },
+      {
+        volume = "/mnt/ssd/common"
+        path   = "/common"
+      },
     ]
   }
 }

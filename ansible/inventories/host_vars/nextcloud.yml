@@ -9,3 +9,6 @@ app_dir_perms:
   - path: /nextcloud_data
     owner: "82"
     group: "82"
+  - path: /common
+    owner: "33"
+    group: "33"
