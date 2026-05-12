@@ -2,5 +2,5 @@ services:
   - subdomain: status
     port: 8080
     icon: sh:gatus
-    auth_type: proxy
+    auth_type: none
     disable_logs: true

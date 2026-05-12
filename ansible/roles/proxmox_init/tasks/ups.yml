@@ -36,11 +36,16 @@
     regexp: '^MONITOR '
     line: 'MONITOR eaton@localhost 1 upsmon {{ vault_pve_ups_password }} master'
 
+- name: Ensure NUT has access to USB devices
+  ansible.builtin.command: udevadm trigger
+  changed_when: false
+
 - name: Enable and restart NUT services
   ansible.builtin.systemd:
     name: "{{ item }}"
     state: restarted
     enabled: yes
   loop:
+    - nut-driver.target
     - nut-server
     - nut-client
